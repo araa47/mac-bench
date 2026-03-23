@@ -58,19 +58,19 @@ Example workload:
 Headline result:
 
 - Fastest stable model: `mistralai/ministral-3-3b`
-- Average image latency: `2.698s`
+- Average image latency: `2.757s`
 - Load RAM: `2.78 GiB`
-- Stable results: `1/5` models completed all 5 images
+- Stable results: `5/5` models completed all 5 images
 
 Current leaderboard:
 
 | Model | Load RAM GiB | Avg Image Time s | Success | Notes |
 |---|---:|---:|---:|---|
-| `mistralai/ministral-3-3b` | 2.78 | 2.698 | 5/5 | Fastest and only fully stable `gguf` result |
-| `allenai/olmocr-2-7b` | 5.62 | 4.525 | 4/5 | Smaller images removed most of the old image-processing failures |
-| `qwen/qwen2.5-vl-7b` | 5.62 | 5.005 | 4/5 | Same improvement pattern as Olmocr, still fails image 4 |
-| `qwen/qwen3.5-9b` | 6.10 | 8.051 | 1/5 | Still leaks reasoning and returns blank final answers |
-| `qwen/qwen3.5-35b-a3b` | 20.56 | - | 0/5 | Still returns blank final answers |
+| `mistralai/ministral-3-3b` | 2.78 | 2.757 | 5/5 | Fastest stable `gguf` result |
+| `allenai/olmocr-2-7b` | 5.62 | 4.722 | 5/5 | Stable after unload/load settle time between models |
+| `qwen/qwen2.5-vl-7b` | 5.62 | 4.890 | 5/5 | Stable after unload/load settle time between models |
+| `qwen/qwen3.5-35b-a3b` | 20.56 | 10.979 | 5/5 | Stable with adaptive retry when reasoning exhausts the default token budget |
+| `qwen/qwen3.5-9b` | 6.10 | 18.482 | 5/5 | Stable with adaptive retry when reasoning exhausts the default token budget |
 
 ## Quick Start
 
@@ -85,6 +85,9 @@ uv run python -m mac_bench vision benchmark \
   --prompt-file examples/prompts/doorbell-person.txt \
   --preserve-image-names \
   --format gguf \
+  --context-length 8192 \
+  --load-settle-seconds 5 \
+  --unload-settle-seconds 5 \
   --output-dir docs
 ```
 
@@ -121,6 +124,9 @@ uv run python -m mac_bench vision benchmark \
   --prompt-file examples/prompts/doorbell-person.txt \
   --preserve-image-names \
   --format gguf \
+  --context-length 8192 \
+  --load-settle-seconds 5 \
+  --unload-settle-seconds 5 \
   --output-name vision-doorbell-example \
   --output-dir docs
 ```

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import base64
 import copy
 import json
@@ -31,6 +32,16 @@ from .lm_studio import (
     request_json,
     unload_all_models,
     wait_for_loaded_model,
+    wait_for_no_loaded_models,
+)
+
+DEFAULT_LOAD_SETTLE_SECONDS = 5.0
+DEFAULT_UNLOAD_SETTLE_SECONDS = 5.0
+DEFAULT_RETRY_DELAY_SECONDS = 3.0
+DEFAULT_REASONING_RETRY_MAX_TOKENS = 2048
+TRANSIENT_IMAGE_ERROR_SNIPPETS = (
+    "failed to process image",
+    "image process",
 )
 
 
@@ -219,6 +230,87 @@ async def run_image_request(
     identifier: str,
     image: BenchmarkImage,
     profile: RequestProfile,
+    retry_delay_seconds: float = DEFAULT_RETRY_DELAY_SECONDS,
+    reasoning_retry_max_tokens: int = DEFAULT_REASONING_RETRY_MAX_TOKENS,
+) -> ImageBenchmarkResult:
+    return await _run_image_request_attempts(
+        base_url=base_url,
+        identifier=identifier,
+        image=image,
+        profile=profile,
+        retry_delay_seconds=retry_delay_seconds,
+        reasoning_retry_max_tokens=reasoning_retry_max_tokens,
+    )
+
+
+def should_retry_transient_image_error(result: ImageBenchmarkResult) -> bool:
+    if not result.error:
+        return False
+    error_text = result.error.lower()
+    return any(snippet in error_text for snippet in TRANSIENT_IMAGE_ERROR_SNIPPETS)
+
+
+def should_retry_with_higher_token_budget(result: ImageBenchmarkResult) -> bool:
+    return (
+        result.error == "Blank final response."
+        and result.finish_reason == "length"
+        and result.reasoning_present
+    )
+
+
+async def _run_image_request_attempts(
+    *,
+    base_url: str,
+    identifier: str,
+    image: BenchmarkImage,
+    profile: RequestProfile,
+    retry_delay_seconds: float,
+    reasoning_retry_max_tokens: int,
+) -> ImageBenchmarkResult:
+    result = await _send_image_request(
+        base_url=base_url,
+        identifier=identifier,
+        image=image,
+        prompt_text=profile.prompt_text,
+        temperature=profile.temperature,
+        max_tokens=profile.max_tokens,
+        extra_body=profile.extra_body,
+    )
+    if should_retry_transient_image_error(result):
+        await asyncio.sleep(retry_delay_seconds)
+        result = await _send_image_request(
+            base_url=base_url,
+            identifier=identifier,
+            image=image,
+            prompt_text=profile.prompt_text,
+            temperature=profile.temperature,
+            max_tokens=profile.max_tokens,
+            extra_body=profile.extra_body,
+        )
+    if should_retry_with_higher_token_budget(result):
+        await asyncio.sleep(retry_delay_seconds)
+        retry_max_tokens = max(profile.max_tokens, reasoning_retry_max_tokens)
+        result = await _send_image_request(
+            base_url=base_url,
+            identifier=identifier,
+            image=image,
+            prompt_text=profile.prompt_text,
+            temperature=profile.temperature,
+            max_tokens=retry_max_tokens,
+            extra_body=profile.extra_body,
+        )
+    return result
+
+
+async def _send_image_request(
+    *,
+    base_url: str,
+    identifier: str,
+    image: BenchmarkImage,
+    prompt_text: str,
+    temperature: float,
+    max_tokens: int,
+    extra_body: dict[str, object],
 ) -> ImageBenchmarkResult:
     mime_type = mimetypes.guess_type(image.source_path.name)[0] or "image/jpeg"
     image_base64 = base64.b64encode(image.source_path.read_bytes()).decode("ascii")
@@ -228,7 +320,7 @@ async def run_image_request(
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": profile.prompt_text},
+                    {"type": "text", "text": prompt_text},
                     {
                         "type": "image_url",
                         "image_url": {"url": f"data:{mime_type};base64,{image_base64}"},
@@ -236,10 +328,10 @@ async def run_image_request(
                 ],
             }
         ],
-        "temperature": profile.temperature,
-        "max_tokens": profile.max_tokens,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
     }
-    payload = merge_request_overrides(payload, profile.extra_body)
+    payload = merge_request_overrides(payload, extra_body)
 
     start = time.perf_counter()
     try:
@@ -363,12 +455,22 @@ async def benchmark_model_profiles(
     profiles: list[RequestProfile],
     base_url: str,
     unload_after: bool,
+    context_length: int | None,
+    load_settle_seconds: float,
+    unload_settle_seconds: float,
+    retry_delay_seconds: float,
+    reasoning_retry_max_tokens: int,
 ) -> list[ModelBenchmarkResult]:
     identifier = benchmark_identifier(model.model_key)
     try:
         estimate = estimate_model(model.model_key)
-        load = load_model(model.model_key, identifier)
+        load = load_model(
+            model.model_key,
+            identifier,
+            context_length=context_length,
+        )
         await wait_for_loaded_model(base_url=base_url, identifier=identifier)
+        await asyncio.sleep(load_settle_seconds)
     except Exception as exc:  # noqa: BLE001
         return [
             build_model_result(
@@ -399,6 +501,8 @@ async def benchmark_model_profiles(
                             identifier=identifier,
                             image=image,
                             profile=profile,
+                            retry_delay_seconds=retry_delay_seconds,
+                            reasoning_retry_max_tokens=reasoning_retry_max_tokens,
                         )
                     )
             except Exception as exc:  # noqa: BLE001
@@ -419,6 +523,8 @@ async def benchmark_model_profiles(
     finally:
         if unload_after:
             unload_all_models()
+            await wait_for_no_loaded_models(base_url=base_url)
+            await asyncio.sleep(unload_settle_seconds)
 
     return results
 
@@ -518,6 +624,11 @@ async def run_benchmark(
     request_profiles: list[RequestProfile],
     memory_target_gib: float = 32.0,
     preserve_image_names: bool = False,
+    context_length: int | None = None,
+    load_settle_seconds: float = DEFAULT_LOAD_SETTLE_SECONDS,
+    unload_settle_seconds: float = DEFAULT_UNLOAD_SETTLE_SECONDS,
+    retry_delay_seconds: float = DEFAULT_RETRY_DELAY_SECONDS,
+    reasoning_retry_max_tokens: int = DEFAULT_REASONING_RETRY_MAX_TOKENS,
     show_progress: bool = False,
 ) -> BenchmarkRun:
     images = collect_images(
@@ -545,6 +656,8 @@ async def run_benchmark(
     ]
 
     unload_all_models()
+    await wait_for_no_loaded_models(base_url=base_url)
+    await asyncio.sleep(unload_settle_seconds)
     model_results: list[ModelBenchmarkResult] = []
     for index, model in enumerate(selected_models, start=1):
         if show_progress:
@@ -560,6 +673,11 @@ async def run_benchmark(
                 profiles=request_profiles,
                 base_url=base_url,
                 unload_after=not keep_loaded or index != len(selected_models),
+                context_length=context_length,
+                load_settle_seconds=load_settle_seconds,
+                unload_settle_seconds=unload_settle_seconds,
+                retry_delay_seconds=retry_delay_seconds,
+                reasoning_retry_max_tokens=reasoning_retry_max_tokens,
             )
         )
 

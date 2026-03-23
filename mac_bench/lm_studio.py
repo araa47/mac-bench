@@ -111,10 +111,16 @@ def estimate_model(model_key: str) -> EstimateResult:
     )
 
 
-def load_model(model_key: str, identifier: str) -> LoadResult:
-    raw_output = run_command(
-        [str(lms_binary()), "load", model_key, "-y", "--identifier", identifier]
-    )
+def load_model(
+    model_key: str,
+    identifier: str,
+    *,
+    context_length: int | None = None,
+) -> LoadResult:
+    command = [str(lms_binary()), "load", model_key, "-y", "--identifier", identifier]
+    if context_length is not None:
+        command.extend(["--context-length", str(context_length)])
+    raw_output = run_command(command)
     load_time_match = LOAD_TIME_PATTERN.search(raw_output)
     reported_memory_match = FLOAT_GIB_PATTERN.search(raw_output)
     return LoadResult(
@@ -214,6 +220,21 @@ async def wait_for_loaded_model(
             return
         await asyncio.sleep(1)
     raise BenchmarkError(f"Timed out waiting for model {identifier} to appear in API.")
+
+
+async def wait_for_no_loaded_models(
+    base_url: str,
+    timeout_seconds: int = 120,
+) -> None:
+    import asyncio
+
+    deadline = asyncio.get_running_loop().time() + timeout_seconds
+    while asyncio.get_running_loop().time() < deadline:
+        loaded_models = await fetch_loaded_model_ids(base_url)
+        if not loaded_models:
+            return
+        await asyncio.sleep(1)
+    raise BenchmarkError("Timed out waiting for loaded models to unload from the API.")
 
 
 def collect_machine_info() -> dict[str, object]:

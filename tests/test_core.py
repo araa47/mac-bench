@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 core = importlib.import_module("mac_bench.core")
+lm_studio = importlib.import_module("mac_bench.lm_studio")
 
 
 def build_demo_run(image_path: Path | None = None) -> Any:
@@ -282,3 +283,100 @@ def test_choose_models_respects_format_filter() -> None:
     )
 
     assert [model.model_key for model in selected] == ["keep/model"]
+
+
+def test_should_retry_transient_image_error_matches_lm_studio_image_failure() -> None:
+    result = core.ImageBenchmarkResult(
+        image_label="sample-01.jpg",
+        elapsed_seconds=1.0,
+        prompt_tokens=None,
+        completion_tokens=None,
+        total_tokens=None,
+        response_text="",
+        reasoning_present=False,
+        reasoning_preview=None,
+        finish_reason=None,
+        error='HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {"error":"failed to process image"}',
+    )
+
+    assert core.should_retry_transient_image_error(result) is True
+
+
+def test_should_retry_transient_image_error_ignores_non_transient_error() -> None:
+    result = core.ImageBenchmarkResult(
+        image_label="sample-01.jpg",
+        elapsed_seconds=1.0,
+        prompt_tokens=None,
+        completion_tokens=None,
+        total_tokens=None,
+        response_text="",
+        reasoning_present=False,
+        reasoning_preview=None,
+        finish_reason=None,
+        error="Blank final response.",
+    )
+
+    assert core.should_retry_transient_image_error(result) is False
+
+
+def test_should_retry_with_higher_token_budget_only_for_reasoning_length_blank() -> (
+    None
+):
+    retryable = core.ImageBenchmarkResult(
+        image_label="sample-01.jpg",
+        elapsed_seconds=1.0,
+        prompt_tokens=999,
+        completion_tokens=160,
+        total_tokens=1159,
+        response_text="",
+        reasoning_present=True,
+        reasoning_preview="analysis",
+        finish_reason="length",
+        error="Blank final response.",
+    )
+    non_retryable = core.ImageBenchmarkResult(
+        image_label="sample-01.jpg",
+        elapsed_seconds=1.0,
+        prompt_tokens=999,
+        completion_tokens=160,
+        total_tokens=1159,
+        response_text="",
+        reasoning_present=False,
+        reasoning_preview=None,
+        finish_reason="length",
+        error="Blank final response.",
+    )
+
+    assert core.should_retry_with_higher_token_budget(retryable) is True
+    assert core.should_retry_with_higher_token_budget(non_retryable) is False
+
+
+def test_load_model_passes_context_length(monkeypatch: Any) -> None:
+    commands: list[list[str]] = []
+
+    def fake_run_command(command: list[str]) -> str:
+        commands.append(command)
+        return "Model loaded successfully in 1.23s.\n(4.56 GiB)"
+
+    monkeypatch.setattr(lm_studio, "run_command", fake_run_command)
+
+    load_result = core.load_model(
+        "demo/model",
+        "demo-identifier",
+        context_length=8192,
+    )
+
+    assert commands == [
+        [
+            str(core.lms_binary()),
+            "load",
+            "demo/model",
+            "-y",
+            "--identifier",
+            "demo-identifier",
+            "--context-length",
+            "8192",
+        ]
+    ]
+    assert load_result.load_time_seconds == 1.23
+    assert load_result.reported_memory_gib == 4.56

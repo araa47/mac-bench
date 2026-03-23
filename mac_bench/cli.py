@@ -314,6 +314,24 @@ def benchmark(
         bool,
         typer.Option(help="Keep original image file names in the reports."),
     ] = False,
+    context_length: Annotated[
+        int | None,
+        typer.Option(
+            help="Optional LM Studio load-time context length override for each model."
+        ),
+    ] = None,
+    load_settle_seconds: Annotated[
+        float,
+        typer.Option(
+            help="Seconds to wait after a model appears in the API before sending requests."
+        ),
+    ] = 5.0,
+    unload_settle_seconds: Annotated[
+        float,
+        typer.Option(
+            help="Seconds to wait after unloading models before loading the next model."
+        ),
+    ] = 5.0,
     output_name: Annotated[
         str | None,
         typer.Option(help="Optional report name prefix override."),
@@ -340,6 +358,9 @@ def benchmark(
                 request_profiles=profiles,
                 memory_target_gib=memory_target_gib,
                 preserve_image_names=preserve_image_names,
+                context_length=context_length,
+                load_settle_seconds=load_settle_seconds,
+                unload_settle_seconds=unload_settle_seconds,
                 show_progress=True,
             )
         )

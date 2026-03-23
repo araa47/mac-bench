@@ -9,6 +9,8 @@ from .benchmark import (
     preferred_memory_value,
     run_benchmark,
     sanitize_image_directory,
+    should_retry_transient_image_error,
+    should_retry_with_higher_token_budget,
     supported_image_paths,
 )
 from .entities import (
@@ -39,6 +41,7 @@ from .lm_studio import (
     run_doctor,
     unload_all_models,
     wait_for_loaded_model,
+    wait_for_no_loaded_models,
 )
 from .reporting import (
     ReportArtifacts,
@@ -90,8 +93,11 @@ __all__ = [
     "run_command",
     "run_doctor",
     "sanitize_image_directory",
+    "should_retry_transient_image_error",
+    "should_retry_with_higher_token_budget",
     "supported_image_paths",
     "unload_all_models",
     "wait_for_loaded_model",
+    "wait_for_no_loaded_models",
     "write_reports",
 ]
