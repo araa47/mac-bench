@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "filename": "01-doorbell-takeout.jpg",
+      "title": "Daytime courier pressing the doorbell with a parcel",
+      "author": "Generated via Google Vertex AI (gemini-3-pro-image)"
+    },
+    {
+      "filename": "02-knock-packages.jpg",
+      "title": "Dusk food delivery at the front door",
+      "author": "Generated via Google Vertex AI (gemini-3-pro-image)"
+    },
+    {
+      "filename": "03-front-door-dropoff.jpg",
+      "title": "Partial courier frame while leaving parcels on the mat",
+      "author": "Generated via Google Vertex AI (gemini-3-pro-image)"
+    },
+    {
+      "filename": "04-delivering-takeout.jpg",
+      "title": "Night delivery driver carrying parcels under the porch light",
+      "author": "Generated via Google Vertex AI (gemini-3-pro-image)"
+    },
+    {
+      "filename": "05-online-order-dropoff.jpg",
+      "title": "Empty porch after a delivery with no person visible",
+      "author": "Generated via Google Vertex AI (gemini-3-pro-image)"
+    }
+  ]
+}
