@@ -359,6 +359,7 @@ def test_load_model_passes_context_length(monkeypatch: Any) -> None:
         return "Model loaded successfully in 1.23s.\n(4.56 GiB)"
 
     monkeypatch.setattr(lm_studio, "run_command", fake_run_command)
+    monkeypatch.setattr(lm_studio, "lms_binary", lambda: Path("/usr/bin/lms"))
 
     load_result = core.load_model(
         "demo/model",
@@ -368,7 +369,7 @@ def test_load_model_passes_context_length(monkeypatch: Any) -> None:
 
     assert commands == [
         [
-            str(core.lms_binary()),
+            "/usr/bin/lms",
             "load",
             "demo/model",
             "-y",
