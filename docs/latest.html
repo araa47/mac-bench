@@ -1043,9 +1043,38 @@
         max-width: none;
       }
     }
+
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--panel-strong); border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px); padding: 10px 0;
+    }
+    .nav-inner {
+      width: min(1240px, calc(100vw - 32px)); margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      font: 500 0.82rem/1 var(--mono); color: var(--accent);
+      text-decoration: none; padding: 6px 14px;
+      background: var(--chip-bg); border: 1px solid var(--chip-border);
+      border-radius: 999px; transition: background 0.2s;
+    }
+    .nav-back:hover { background: var(--accent-soft); }
+    .nav-breadcrumb {
+      font: 400 0.78rem/1.2 var(--mono); color: var(--muted);
+    }
+    .nav-breadcrumb a { color: var(--accent); text-decoration: none; }
+    .nav-breadcrumb a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <a href="../" class="nav-back">&#8592; Home</a>
+      <span class="nav-breadcrumb"><a href="../">mac-bench</a> / Vision Benchmark</span>
+    </div>
+  </nav>
   <div class="page">
     <header class="panel hero">
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">Light / Dark</button>
@@ -1262,6 +1291,31 @@
       return document.getElementById(id);
     }
 
+    function resolveReportPath(path) {
+      if (typeof path !== "string" || path.length === 0) {
+        return null;
+      }
+      if (
+        path.startsWith("/") ||
+        path.startsWith("./") ||
+        path.startsWith("../") ||
+        /^[a-z]+:/i.test(path)
+      ) {
+        return path;
+      }
+      if (!path.startsWith("images/")) {
+        return path;
+      }
+      const currentPath = window.location.pathname || "";
+      if (
+        currentPath.includes("/vision/") ||
+        currentPath.includes("/face-recognition/")
+      ) {
+        return "../" + path;
+      }
+      return path;
+    }
+
     function normalizeImages(rawImages) {
       if (!Array.isArray(rawImages)) {
         return [];
@@ -1277,7 +1331,9 @@
           return {
             label: item.label,
             title: typeof item.title === "string" ? item.title : item.label,
-            report_path: typeof item.report_path === "string" ? item.report_path : null,
+            report_path: resolveReportPath(
+              typeof item.report_path === "string" ? item.report_path : null
+            ),
             page_url: typeof item.page_url === "string" ? item.page_url : null,
             source_url: typeof item.source_url === "string" ? item.source_url : null,
             author: typeof item.author === "string" ? item.author : null,
@@ -1402,8 +1458,9 @@
 
     function modelUrl(model) {
       const key = String(model.model_key || "");
-      if (!key || !key.includes("/")) { return ""; }
-      return "https://lmstudio.ai/models/" + encodeURI(key);
+      if (!key) { return ""; }
+      if (key.includes("/")) { return "https://huggingface.co/" + encodeURI(key); }
+      return "https://huggingface.co/models?search=" + encodeURIComponent(key);
     }
 
     function linkedName(model, text) {

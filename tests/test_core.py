@@ -190,6 +190,7 @@ def test_html_report_includes_dashboard_content() -> None:
     assert "Latency vs memory footprint" in report
     assert "demo/model" in report
     assert "benchmark-data" in report
+    assert "function resolveReportPath" in report
 
 
 def test_write_reports_writes_html_index_and_latest(tmp_path: Path) -> None:
