@@ -12,13 +12,13 @@ Generation setup:
 
 The goal of the refreshed corpus is to better match real doorbell and porch security-camera footage than the previous stock-photo set.
 
-- `01-doorbell-takeout.jpg`
+- `sample-01.jpg`
   Scenario: Daytime courier pressing the doorbell with a parcel
-- `02-knock-packages.jpg`
+- `sample-02.jpg`
   Scenario: Dusk food delivery at the front door
-- `03-front-door-dropoff.jpg`
+- `sample-03.jpg`
   Scenario: Partial courier frame while leaving parcels on the mat
-- `04-delivering-takeout.jpg`
+- `sample-04.jpg`
   Scenario: Night delivery driver carrying parcels under the porch light
-- `05-online-order-dropoff.jpg`
+- `sample-05.jpg`
   Scenario: Empty porch after a delivery with no person visible

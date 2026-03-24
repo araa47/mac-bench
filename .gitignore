@@ -203,7 +203,5 @@ uv_playground.egg-info/
 images/
 !docs/images/
 !docs/images/**
-!examples/images/
-!examples/images/**
 sample-images/
 runs/

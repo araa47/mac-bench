@@ -1528,6 +1528,57 @@ def build_html_report(
         </article>
       </section>
 
+      <section class="chart-grid">
+        <article class="panel panel-body">
+          <div class="section-kicker">Efficiency</div>
+          <h2>Tokens per second per GiB</h2>
+          <p class="section-desc">A combined efficiency metric: how many tokens each model generates per second for each GiB of RAM it uses. Higher is better — it rewards models that are both fast and lightweight.</p>
+          <div class="chart-shell" id="efficiency-chart"></div>
+        </article>
+        <article class="panel panel-body">
+          <div class="section-kicker">Load Time</div>
+          <h2>Model loading speed</h2>
+          <p class="section-desc">How long each model takes to load into memory from disk. Shorter load times mean faster cold starts.</p>
+          <div class="chart-shell" id="load-time-chart"></div>
+        </article>
+      </section>
+
+      <section class="panel panel-body">
+        <div class="section-kicker">Latency Spread</div>
+        <h2>Min / Median / Max latency per model</h2>
+        <p class="section-desc">Shows the range of response times across images for each stable model. A tight spread indicates consistent performance; a wide spread means the model is sensitive to image complexity.</p>
+        <div class="chart-shell" id="latency-spread-chart"></div>
+      </section>
+
+      <section class="panel panel-body">
+        <div class="section-kicker">Heatmap</div>
+        <h2>Per-image latency heatmap</h2>
+        <p class="section-desc">Each cell shows how long a model took to respond to a specific image. Darker cells mean slower responses. Helps identify which images are hardest for each model.</p>
+        <div class="chart-shell" id="latency-heatmap" style="overflow-x:auto"></div>
+      </section>
+
+      <section class="chart-grid">
+        <article class="panel panel-body">
+          <div class="section-kicker">Format Comparison</div>
+          <h2>GGUF vs safetensors performance</h2>
+          <p class="section-desc">Average latency and throughput grouped by model format. Compares how different weight formats perform on Apple Silicon.</p>
+          <div class="chart-shell" id="format-comparison-chart"></div>
+        </article>
+        <article class="panel panel-body">
+          <div class="section-kicker">Speed Tiers</div>
+          <h2>Models by response time tier</h2>
+          <p class="section-desc">Models grouped into speed tiers: under 2s (real-time), 2–5s (interactive), and 5s+ (batch). The green zone marks the sub-2-second target.</p>
+          <div class="chart-shell" id="speed-tier-chart"></div>
+        </article>
+      </section>
+
+      <section class="panel panel-body">
+        <div class="section-kicker">Responses</div>
+        <h2>Side-by-side response comparison</h2>
+        <p class="section-desc">For each test image, compare what every model actually said. Useful for judging response quality and accuracy beyond just speed.</p>
+        <div class="details-list" id="response-comparison"></div>
+      </section>
+
       <section class="panel panel-body">
         <div class="section-kicker">Summary Table</div>
         <h2>All benchmarked results</h2>
@@ -2197,6 +2248,260 @@ def build_html_report(
       });
     }
 
+    function renderEfficiencyChart(sortedModels) {
+      var plottable = sortedModels.filter(function (model) {
+        return typeof model.completion_tokens_per_second === "number" && model.completion_tokens_per_second > 0 && preferredMemory(model) !== null && preferredMemory(model) > 0;
+      });
+      if (!plottable.length) {
+        byId("efficiency-chart").innerHTML = '<div class="empty-state">No efficiency data available.</div>';
+        return;
+      }
+      function efficiency(model) {
+        return model.completion_tokens_per_second / preferredMemory(model);
+      }
+      plottable.sort(function (a, b) { return efficiency(b) - efficiency(a); });
+      renderMetricBars({
+        targetId: "efficiency-chart",
+        items: plottable.slice(0, 10),
+        valueFor: efficiency,
+        valueLabel: function (model) { return formatFixed(efficiency(model), 2) + " tok/s/GiB"; },
+      });
+    }
+
+    function renderLoadTimeChart(sortedModels) {
+      var plottable = sortedModels.filter(function (model) {
+        return typeof model.load_time_seconds === "number" && model.load_time_seconds > 0;
+      });
+      if (!plottable.length) {
+        byId("load-time-chart").innerHTML = '<div class="empty-state">No load time data available.</div>';
+        return;
+      }
+      plottable.sort(function (a, b) { return (a.load_time_seconds || 0) - (b.load_time_seconds || 0); });
+      renderMetricBars({
+        targetId: "load-time-chart",
+        items: plottable.slice(0, 10),
+        valueFor: function (model) { return model.load_time_seconds; },
+        valueLabel: function (model) { return formatFixed(model.load_time_seconds, 2) + "s"; },
+      });
+    }
+
+    function renderLatencySpread(stableModels) {
+      if (!stableModels.length) {
+        byId("latency-spread-chart").innerHTML = '<div class="empty-state">No stable models to show spread for.</div>';
+        return;
+      }
+      var spreads = stableModels.map(function (model) {
+        var results = Array.isArray(model.results) ? model.results : [];
+        var times = results.map(function (r) { return r.elapsed_seconds; }).filter(function (t) { return typeof t === "number"; }).sort(function (a, b) { return a - b; });
+        if (!times.length) return null;
+        var min = times[0];
+        var max = times[times.length - 1];
+        var mid = times.length % 2 === 0 ? (times[times.length / 2 - 1] + times[times.length / 2]) / 2 : times[Math.floor(times.length / 2)];
+        return { model: model, min: min, median: mid, max: max };
+      }).filter(Boolean);
+      if (!spreads.length) {
+        byId("latency-spread-chart").innerHTML = '<div class="empty-state">No per-image timing data available.</div>';
+        return;
+      }
+      var globalMax = Math.max.apply(null, spreads.map(function (s) { return s.max; }));
+      var barHtml = spreads.map(function (s) {
+        var leftPct = (s.min / globalMax) * 100;
+        var widthPct = ((s.max - s.min) / globalMax) * 100;
+        var medPct = (s.median / globalMax) * 100;
+        return (
+          '<div class="metric-row">' +
+          '<div class="metric-label">' + linkedName(s.model, shortResultLabel(s.model)) + '</div>' +
+          '<div class="track" style="position:relative">' +
+          '<div style="position:absolute;left:' + leftPct + '%;width:' + Math.max(widthPct, 0.5) + '%;height:100%;background:var(--teal);opacity:0.35;border-radius:4px"></div>' +
+          '<div style="position:absolute;left:' + medPct + '%;width:2px;height:100%;background:var(--teal)"></div>' +
+          '</div>' +
+          '<div class="metric-value" style="min-width:10em;font-size:0.82rem">' + escapeHtml(formatFixed(s.min, 2) + ' / ' + formatFixed(s.median, 2) + ' / ' + formatFixed(s.max, 2) + 's') + '</div>' +
+          '</div>'
+        );
+      }).join('');
+      byId("latency-spread-chart").innerHTML = '<div class="chart-bars">' + barHtml + '</div>';
+    }
+
+    function renderLatencyHeatmap(sortedModels) {
+      var modelsWithResults = sortedModels.filter(function (m) { return Array.isArray(m.results) && m.results.length > 0; });
+      if (!modelsWithResults.length || !images.length) {
+        byId("latency-heatmap").innerHTML = '<div class="empty-state">No per-image data for heatmap.</div>';
+        return;
+      }
+      var imageLabels = images.map(function (img) { return img.label; });
+      var allTimes = [];
+      modelsWithResults.forEach(function (m) {
+        m.results.forEach(function (r) {
+          if (typeof r.elapsed_seconds === "number") allTimes.push(r.elapsed_seconds);
+        });
+      });
+      if (!allTimes.length) {
+        byId("latency-heatmap").innerHTML = '<div class="empty-state">No timing data for heatmap.</div>';
+        return;
+      }
+      var minTime = Math.min.apply(null, allTimes);
+      var maxTime = Math.max.apply(null, allTimes);
+      var range = maxTime - minTime || 1;
+
+      function cellColor(t) {
+        if (typeof t !== "number") return "var(--chart-rect)";
+        var ratio = (t - minTime) / range;
+        var r = Math.round(35 + ratio * 130);
+        var g = Math.round(109 - ratio * 60);
+        var b = Math.round(106 - ratio * 40);
+        return "rgb(" + r + "," + g + "," + b + ")";
+      }
+
+      var headerCells = '<th style="position:sticky;left:0;z-index:2;background:var(--surface)">Model</th>' +
+        imageLabels.map(function (label) {
+          var img = imageInfo(label);
+          var short = (img.title || label).length > 12 ? (img.title || label).slice(0, 10) + ".." : (img.title || label);
+          return '<th style="writing-mode:vertical-lr;font-size:0.72rem;padding:4px 2px">' + escapeHtml(short) + '</th>';
+        }).join('');
+
+      var bodyRows = modelsWithResults.map(function (model) {
+        var resultMap = {};
+        (model.results || []).forEach(function (r) { resultMap[r.image_label] = r; });
+        var cells = imageLabels.map(function (label) {
+          var r = resultMap[label];
+          var t = r ? r.elapsed_seconds : null;
+          var bg = cellColor(t);
+          var text = typeof t === "number" ? formatFixed(t, 2) : "—";
+          return '<td style="background:' + bg + ';color:#fff;text-align:center;font-size:0.78rem;padding:3px 6px;font-family:IBM Plex Mono,monospace" title="' + escapeHtml(shortResultLabel(model) + ' × ' + label + ': ' + text + 's') + '">' + escapeHtml(text) + '</td>';
+        }).join('');
+        return '<tr><td style="position:sticky;left:0;z-index:1;background:var(--surface);white-space:nowrap;font-size:0.82rem;padding:4px 8px">' + escapeHtml(shortResultLabel(model)) + '</td>' + cells + '</tr>';
+      }).join('');
+
+      var legendHtml = '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:0.78rem;color:var(--muted)">' +
+        '<span>' + formatFixed(minTime, 1) + 's</span>' +
+        '<div style="flex:1;max-width:200px;height:10px;border-radius:4px;background:linear-gradient(to right,rgb(35,109,106),rgb(165,49,66))"></div>' +
+        '<span>' + formatFixed(maxTime, 1) + 's</span>' +
+        '</div>';
+
+      byId("latency-heatmap").innerHTML =
+        '<table style="border-collapse:collapse;width:100%"><thead><tr>' + headerCells + '</tr></thead><tbody>' + bodyRows + '</tbody></table>' + legendHtml;
+    }
+
+    function renderFormatComparison(sortedModels) {
+      var stableByFormat = {};
+      sortedModels.forEach(function (m) {
+        if (typeof m.average_latency_seconds !== "number") return;
+        var fmt = (m.format || "unknown").toLowerCase();
+        if (!stableByFormat[fmt]) stableByFormat[fmt] = [];
+        stableByFormat[fmt].push(m);
+      });
+      var formats = Object.keys(stableByFormat).sort();
+      if (formats.length < 1) {
+        byId("format-comparison-chart").innerHTML = '<div class="empty-state">Not enough format data.</div>';
+        return;
+      }
+      var rows = formats.map(function (fmt) {
+        var ms = stableByFormat[fmt];
+        var avgLat = ms.reduce(function (s, m) { return s + m.average_latency_seconds; }, 0) / ms.length;
+        var avgTok = ms.reduce(function (s, m) { return s + (m.completion_tokens_per_second || 0); }, 0) / ms.length;
+        var avgMem = ms.filter(function (m) { return preferredMemory(m) !== null; });
+        var memVal = avgMem.length > 0 ? avgMem.reduce(function (s, m) { return s + preferredMemory(m); }, 0) / avgMem.length : null;
+        return { format: fmt, count: ms.length, avgLat: avgLat, avgTok: avgTok, avgMem: memVal };
+      });
+      var maxLat = Math.max.apply(null, rows.map(function (r) { return r.avgLat; }));
+      var maxTok = Math.max.apply(null, rows.map(function (r) { return r.avgTok; }));
+      var colors = { gguf: "#5b8def", safetensors: "#e5704b", mlx: "#50c878" };
+      var html = rows.map(function (r) {
+        var barColor = colors[r.format] || "#888";
+        var latPct = maxLat > 0 ? (r.avgLat / maxLat * 100) : 0;
+        var tokPct = maxTok > 0 ? (r.avgTok / maxTok * 100) : 0;
+        return '<div style="margin-bottom:16px">' +
+          '<div style="font-weight:600;font-size:0.9rem;margin-bottom:4px">' + escapeHtml(r.format.toUpperCase()) +
+          ' <span class="status-note">(' + r.count + ' model' + (r.count !== 1 ? 's' : '') + ')</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
+          '<span style="width:70px;font-size:0.78rem;color:var(--muted)">Latency</span>' +
+          '<div style="flex:1;height:18px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
+          '<div style="width:' + latPct + '%;height:100%;background:' + barColor + ';border-radius:4px;transition:width .3s"></div></div>' +
+          '<span class="mono" style="font-size:0.82rem;min-width:55px;text-align:right">' + formatFixed(r.avgLat, 2) + 's</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span style="width:70px;font-size:0.78rem;color:var(--muted)">Tok/s</span>' +
+          '<div style="flex:1;height:18px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
+          '<div style="width:' + tokPct + '%;height:100%;background:' + barColor + ';opacity:0.7;border-radius:4px;transition:width .3s"></div></div>' +
+          '<span class="mono" style="font-size:0.82rem;min-width:55px;text-align:right">' + formatFixed(r.avgTok, 1) + '</span></div>' +
+          (r.avgMem !== null ? '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px;margin-left:78px">Avg RAM: ' + formatFixed(r.avgMem, 2) + ' GiB</div>' : '') +
+          '</div>';
+      }).join('');
+      byId("format-comparison-chart").innerHTML = html;
+    }
+
+    function renderSpeedTierChart(sortedModels) {
+      var tiers = [
+        { label: "Real-time (< 2s)", max: 2, color: "#50c878", models: [] },
+        { label: "Interactive (2–5s)", max: 5, color: "#f0ad4e", models: [] },
+        { label: "Batch (5s+)", max: Infinity, color: "#d9534f", models: [] }
+      ];
+      sortedModels.forEach(function (m) {
+        if (typeof m.average_latency_seconds !== "number") return;
+        for (var i = 0; i < tiers.length; i++) {
+          if (m.average_latency_seconds < tiers[i].max) {
+            tiers[i].models.push(m);
+            break;
+          }
+        }
+      });
+      var maxLat = Math.max.apply(null, sortedModels.filter(function (m) { return typeof m.average_latency_seconds === "number"; }).map(function (m) { return m.average_latency_seconds; }).concat([1]));
+      var html = tiers.map(function (tier) {
+        if (!tier.models.length) {
+          return '<div style="margin-bottom:16px;opacity:0.5">' +
+            '<div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;color:' + tier.color + '">' + escapeHtml(tier.label) + '</div>' +
+            '<div style="font-size:0.82rem;color:var(--muted);font-style:italic">No models in this tier</div></div>';
+        }
+        var modelBars = tier.models.sort(function (a, b) { return a.average_latency_seconds - b.average_latency_seconds; }).map(function (m) {
+          var pct = Math.max(3, m.average_latency_seconds / maxLat * 100);
+          var tokInfo = m.completion_tokens_per_second ? " · " + formatFixed(m.completion_tokens_per_second, 1) + " tok/s" : "";
+          return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">' +
+            '<span style="min-width:180px;font-size:0.82rem;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(shortResultLabel(m)) + '">' + escapeHtml(shortResultLabel(m)) + '</span>' +
+            '<div style="flex:1;height:20px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
+            '<div style="width:' + pct + '%;height:100%;background:' + tier.color + ';border-radius:4px;transition:width .3s"></div></div>' +
+            '<span class="mono" style="font-size:0.82rem;min-width:100px;text-align:right">' + formatFixed(m.average_latency_seconds, 3) + 's' + escapeHtml(tokInfo) + '</span></div>';
+        }).join('');
+        return '<div style="margin-bottom:20px">' +
+          '<div style="font-weight:600;font-size:0.9rem;margin-bottom:8px;color:' + tier.color + '">' + escapeHtml(tier.label) +
+          ' <span class="status-note">(' + tier.models.length + ')</span></div>' + modelBars + '</div>';
+      }).join('');
+      byId("speed-tier-chart").innerHTML = html;
+    }
+
+    function renderResponseComparison(sortedModels) {
+      var modelsWithResults = sortedModels.filter(function (m) { return Array.isArray(m.results) && m.results.length > 0; });
+      if (!modelsWithResults.length || !images.length) {
+        byId("response-comparison").innerHTML = '<div class="empty-state">No response data to compare.</div>';
+        return;
+      }
+      var imageLabels = images.map(function (img) { return img.label; });
+      var html = imageLabels.map(function (label) {
+        var img = imageInfo(label);
+        var responses = modelsWithResults.map(function (model) {
+          var result = (model.results || []).find(function (r) { return r.image_label === label; });
+          var text = result ? (result.error ? "ERROR: " + result.error : (result.response_text || "—")) : "—";
+          var time = result && typeof result.elapsed_seconds === "number" ? formatFixed(result.elapsed_seconds, 2) + "s" : "—";
+          return (
+            '<div style="border:1px solid var(--chart-grid);border-radius:8px;padding:12px;flex:1;min-width:250px">' +
+            '<div style="font-weight:600;margin-bottom:4px">' + escapeHtml(shortResultLabel(model)) + ' <span class="status-note">' + escapeHtml(time) + '</span></div>' +
+            '<div style="font-size:0.85rem;white-space:pre-wrap;max-height:200px;overflow-y:auto">' + escapeHtml(text) + '</div>' +
+            '</div>'
+          );
+        }).join('');
+        return (
+          '<details>' +
+          '<summary>' +
+          '<div class="details-title">' +
+          '<strong>' + escapeHtml(img.title || label) + '</strong>' +
+          '<span class="status-note">' + escapeHtml(label) + '</span>' +
+          '</div>' +
+          '</summary>' +
+          '<div class="details-body" style="display:flex;flex-wrap:wrap;gap:12px">' + responses + '</div>' +
+          '</details>'
+        );
+      }).join('');
+      byId("response-comparison").innerHTML = html;
+    }
+
     function renderSummaryTable(sortedModels) {
       byId("summary-table").innerHTML = sortedModels
         .map((model) => {
@@ -2281,6 +2586,13 @@ def build_html_report(
     renderReliability(sortedModels);
     renderMemoryChart(sortedModels);
     renderThroughputChart(sortedModels);
+    renderEfficiencyChart(sortedModels);
+    renderLoadTimeChart(sortedModels);
+    renderLatencySpread(stableModels);
+    renderLatencyHeatmap(sortedModels);
+    renderFormatComparison(sortedModels);
+    renderSpeedTierChart(sortedModels);
+    renderResponseComparison(sortedModels);
     renderSummaryTable(sortedModels);
     renderModelDetails(sortedModels);
     initImageModal();

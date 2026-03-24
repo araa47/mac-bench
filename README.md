@@ -35,8 +35,8 @@ The report measures:
 
 The bundled public example uses 5 repo-generated doorbell and porch security-camera frames, committed as `1280px`-wide JPEGs so the benchmark corpus stays realistic without shipping oversized stock media.
 
-- Image folder: [examples/images](examples/images)
-- Credits: [examples/images/CREDITS.md](examples/images/CREDITS.md)
+- Image folder: [docs/images](docs/images)
+- Credits: [docs/images/CREDITS.md](docs/images/CREDITS.md)
 - Prompt: [examples/prompts/doorbell-person.txt](examples/prompts/doorbell-person.txt)
 
 ## Current Example Run
@@ -81,7 +81,7 @@ uv sync --all-extras --dev
 uv run python -m mac_bench doctor
 uv run python -m mac_bench list-models --format gguf
 uv run python -m mac_bench vision benchmark \
-  --images-dir examples/images \
+  --images-dir docs/images \
   --prompt-file examples/prompts/doorbell-person.txt \
   --preserve-image-names \
   --format gguf \
@@ -120,7 +120,7 @@ The HTML dashboard is fully static. To publish it from the repository:
 
 ```bash
 uv run python -m mac_bench vision benchmark \
-  --images-dir examples/images \
+  --images-dir docs/images \
   --prompt-file examples/prompts/doorbell-person.txt \
   --preserve-image-names \
   --format gguf \
