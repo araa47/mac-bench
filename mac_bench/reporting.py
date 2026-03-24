@@ -1696,6 +1696,31 @@ def build_html_report(
       return document.getElementById(id);
     }
 
+    function resolveReportPath(path) {
+      if (typeof path !== "string" || path.length === 0) {
+        return null;
+      }
+      if (
+        path.startsWith("/") ||
+        path.startsWith("./") ||
+        path.startsWith("../") ||
+        /^[a-z]+:/i.test(path)
+      ) {
+        return path;
+      }
+      if (!path.startsWith("images/")) {
+        return path;
+      }
+      const currentPath = window.location.pathname || "";
+      if (
+        currentPath.includes("/vision/") ||
+        currentPath.includes("/face-recognition/")
+      ) {
+        return "../" + path;
+      }
+      return path;
+    }
+
     function normalizeImages(rawImages) {
       if (!Array.isArray(rawImages)) {
         return [];
@@ -1711,7 +1736,9 @@ def build_html_report(
           return {
             label: item.label,
             title: typeof item.title === "string" ? item.title : item.label,
-            report_path: typeof item.report_path === "string" ? item.report_path : null,
+            report_path: resolveReportPath(
+              typeof item.report_path === "string" ? item.report_path : null
+            ),
             page_url: typeof item.page_url === "string" ? item.page_url : null,
             source_url: typeof item.source_url === "string" ? item.source_url : null,
             author: typeof item.author === "string" ? item.author : null,
