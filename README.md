@@ -1,80 +1,44 @@
-# mac-bench
+# 🖥️ mac-bench
 
-`mac-bench` benchmarks local LM Studio models on macOS. The current suite is `vision`: it sends the same prompt and the same image set to each installed vision model, then records latency, RAM use, throughput, success rate, and failure modes.
+**Open benchmark suite for local AI models on Apple Silicon.**
 
-This repo started from a practical Home Assistant problem: finding a local vision model that can turn doorbell snapshots into short, useful person descriptions.
+I wanted to run vision and face recognition models locally on my Mac mini — no cloud, no subscriptions, no sending camera feeds to someone else's servers. Before buying extra hardware, I benchmarked a bunch of tiny models to see if any were actually usable. Turns out, a 1.2B-parameter model describes images in **0.36 seconds** using **1.2 GB of RAM**. You don't need a beefy GPU rig for this stuff.
 
-## Live Report
+`mac-bench` packages what I learned: reproducible benchmarks for **vision** (image description) and **face recognition** (verification), with fully static HTML dashboards you can host anywhere.
 
-Published report:
+## 📊 Live Dashboards
 
-- <https://araa47.github.io/mac-bench/>
+- **[Homepage](https://araa47.github.io/mac-bench/)** — overview + links to both benchmarks
+- **[Vision Benchmark](https://araa47.github.io/mac-bench/vision/)** — image description leaderboard
+- **[Face Recognition Benchmark](https://araa47.github.io/mac-bench/face-recognition/)** — face verification leaderboard
 
-Repository copy:
+## 🏆 Vision Benchmark — Top 5
 
-- [Static dashboard](docs/index.html)
-- [Markdown report](docs/vision-doorbell-example.md)
-- [Raw JSON](docs/vision-doorbell-example.json)
+**Machine**: Mac mini / Apple M4 Pro / 64 GB · 28 models tested · [Full results →](https://araa47.github.io/mac-bench/vision/)
 
-## What The Vision Benchmark Tests
+| Rank | Model | RAM | Avg Latency | Tokens/s | Success |
+|:---:|---|---:|---:|---:|:---:|
+| 🥇 | [`smolvlm-500m-instruct`](https://huggingface.co/HuggingFaceTB/SmolVLM-500M-Instruct) | — | 0.211s | 78.8 | 5/5 |
+| 🥈 | [`liquid/lfm2.5-1.2b`](https://huggingface.co/liquid/lfm2.5-1.2b) | 1.16 GiB | 0.359s | 80.9 | 5/5 |
+| 🥉 | [`moondream-2b-2025-04-14`](https://huggingface.co/vikhyatk/moondream2) | 3.49 GiB | 1.476s | 48.1 | 5/5 |
+| 4 | [`nvidia/nemotron-3-nano`](https://huggingface.co/nvidia/Nemotron-3-Nano) | 16.57 GiB | 2.601s | 61.1 | 5/5 |
+| 5 | [`mistralai/ministral-3-3b`](https://huggingface.co/mistralai/Ministral-3b-instruct-2410) | 2.78 GiB | 2.684s | 15.1 | 5/5 |
 
-Every model gets:
+## 🏆 Face Recognition — Top 5
 
-- the same prompt
-- the same local image set
-- the same LM Studio OpenAI-compatible API path
+**15 LFW verification pairs** (10 same-person + 5 different-person) · all local, CPU only · [Full results →](https://araa47.github.io/mac-bench/face-recognition/)
 
-The report measures:
+| Rank | Model | Library | Accuracy | F1 | Avg Verify Time | RAM |
+|:---:|---|---|---:|---:|---:|---:|
+| 🥇 | [InsightFace-buffalo_l](https://github.com/deepinsight/insightface) | insightface | 100.0% | 100.0% | 0.184s | 896 MB |
+| 🥈 | [DeepFace-ArcFace](https://github.com/serengil/deepface) | deepface | 93.3% | 94.7% | 0.376s | 133 MB |
+| 🥉 | [DeepFace-SFace](https://github.com/serengil/deepface) | deepface | 86.7% | 88.9% | 0.249s | 85 MB |
+| 4 | [DeepFace-Facenet](https://github.com/serengil/deepface) | deepface | 80.0% | 82.3% | 0.343s | 199 MB |
+| 5 | [DeepFace-VGG-Face](https://github.com/serengil/deepface) | deepface | 73.3% | 75.0% | 0.587s | 1706 MB |
 
-- load memory
-- per-image latency
-- completion throughput
-- full-set success rate
-- blank answers, image-processing failures, and model crashes
-- whether reasoning text leaked into the response path
+## 🚀 Quick Start
 
-The bundled public example uses 5 repo-generated doorbell and porch security-camera frames, committed as `1280px`-wide JPEGs so the benchmark corpus stays realistic without shipping oversized stock media.
-
-- Image folder: [docs/images](docs/images)
-- Credits: [docs/images/CREDITS.md](docs/images/CREDITS.md)
-- Prompt: [examples/prompts/doorbell-person.txt](examples/prompts/doorbell-person.txt)
-
-## Current Example Run
-
-Example benchmark date: `2026-03-23`
-
-Example machine:
-
-- `Mac mini`
-- `Apple M4 Pro`
-- `64 GB RAM`
-
-Example workload:
-
-- 5 generated doorbell/security-camera images
-- 5 installed `gguf` vision models
-- 1 prompt profile
-
-Headline result:
-
-- Fastest stable model: `mistralai/ministral-3-3b`
-- Average image latency: `2.757s`
-- Load RAM: `2.78 GiB`
-- Stable results: `5/5` models completed all 5 images
-
-Current leaderboard:
-
-| Model | Load RAM GiB | Avg Image Time s | Success | Notes |
-|---|---:|---:|---:|---|
-| `mistralai/ministral-3-3b` | 2.78 | 2.757 | 5/5 | Fastest stable `gguf` result |
-| `allenai/olmocr-2-7b` | 5.62 | 4.722 | 5/5 | Stable after unload/load settle time between models |
-| `qwen/qwen2.5-vl-7b` | 5.62 | 4.890 | 5/5 | Stable after unload/load settle time between models |
-| `qwen/qwen3.5-35b-a3b` | 20.56 | 10.979 | 5/5 | Stable with adaptive retry when reasoning exhausts the default token budget |
-| `qwen/qwen3.5-9b` | 6.10 | 18.482 | 5/5 | Stable with adaptive retry when reasoning exhausts the default token budget |
-
-## Quick Start
-
-Repo-local workflow:
+### Vision Benchmark
 
 ```bash
 uv sync --all-extras --dev
@@ -91,57 +55,61 @@ uv run python -m mac_bench vision benchmark \
   --output-dir docs
 ```
 
-Direct from GitHub with `uvx`:
+### Face Recognition Benchmark
+
+```bash
+uv sync --all-extras --dev
+uv pip install deepface tf-keras insightface onnxruntime opencv-python
+
+uv run python -m face_bench download-dataset
+uv run python -m face_bench benchmark --output-dir docs/face-recognition
+```
+
+Direct from GitHub:
 
 ```bash
 uvx --from git+https://github.com/araa47/mac-bench mac-bench doctor
 uvx --from git+https://github.com/araa47/mac-bench mac-bench list-models
 ```
 
-More setup detail lives in [SETUP.md](SETUP.md).
+More setup detail in [SETUP.md](SETUP.md).
 
-## Example Commands
+## 📁 What Gets Tested
+
+### Vision
+
+Every model gets the same prompt, the same images, and the same LM Studio API path. Measures: load memory, per-image latency, token throughput, success rate, blank answers, crashes, and reasoning leaks.
+
+- Images: [docs/images](docs/images) · [Credits](docs/images/CREDITS.md)
+- Prompt: [examples/prompts/doorbell-person.txt](examples/prompts/doorbell-person.txt)
+
+### Face Recognition
+
+Every library gets the same 15 [LFW](http://vis-www.cs.umass.edu/lfw/) face-verification pairs. Measures: accuracy, precision, recall, F1, time per pair, and RAM.
+
+- Images: [docs/face-recognition/images](docs/face-recognition/images) · [Credits](docs/face-recognition/images/CREDITS.md)
+
+## 🌐 GitHub Pages
+
+Both dashboards are fully static HTML. Publish from the `docs/` folder:
 
 ```bash
-uv run python -m mac_bench doctor
-uv run python -m mac_bench list-models --format gguf
-uv run python -m mac_bench download qwen/qwen3-vl-8b --mlx
-uv run python -m mac_bench vision sanitize-images images sample-images
-uv run python -m mac_bench vision benchmark --images-dir images --format gguf
-uv run python -m mac_bench vision benchmark --profile brief=examples/profiles/brief.json
-uv run python -m mac_bench vision render-report --input docs/latest.json --output-dir docs
-```
-
-For Apple Silicon runs, benchmark `gguf` and `mlx` separately when you care about optimization. The published example uses a `gguf`-only baseline so the results do not mix inference backends.
-
-## GitHub Pages
-
-The HTML dashboard is fully static. To publish it from the repository:
-
-```bash
+# Vision
 uv run python -m mac_bench vision benchmark \
   --images-dir docs/images \
   --prompt-file examples/prompts/doorbell-person.txt \
-  --preserve-image-names \
-  --format gguf \
+  --preserve-image-names --format gguf \
   --context-length 8192 \
-  --load-settle-seconds 5 \
-  --unload-settle-seconds 5 \
-  --output-name vision-doorbell-example \
   --output-dir docs
+
+# Face recognition
+uv run python -m face_bench benchmark \
+  --output-dir docs/face-recognition
 ```
 
-That writes:
+Point GitHub Pages at the `docs` folder → `https://araa47.github.io/mac-bench/`
 
-- `docs/index.html`
-- `docs/latest.html`
-- `docs/latest.json`
-- `docs/latest.md`
-- `docs/images/*`
-
-Commit `docs/` and point GitHub Pages at the repository `docs` folder. For this repo, the expected public URL is `https://araa47.github.io/mac-bench/`.
-
-## Development
+## 🛠️ Development
 
 ```bash
 uv sync --all-extras --dev

@@ -15,8 +15,17 @@ dependencies = [
 
 [project.scripts]
 mac-bench = "mac_bench.cli:main"
+face-bench = "face_bench.cli:main"
 
 [project.optional-dependencies]
+face = [
+    "face-recognition>=1.3.0",
+    "deepface>=0.0.90",
+    "tf-keras>=2.16.0",
+    "insightface>=0.7.3",
+    "onnxruntime>=1.17.0",
+    "opencv-python>=4.9.0",
+]
 dev = [
     "ruff>=0.15.4",
     "prek>=0.3.4",
@@ -33,7 +42,7 @@ filterwarnings = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["mac_bench"]
+packages = ["mac_bench", "face_bench"]
 
 [tool.coverage.run]
 omit = ["*/tests/*"]

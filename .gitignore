@@ -205,3 +205,4 @@ images/
 !docs/images/**
 sample-images/
 runs/
+face_data/

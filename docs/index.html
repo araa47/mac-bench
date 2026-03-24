@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>mac-bench Vision Benchmark</title>
-  <meta name="description" content="Static benchmark dashboard for mac-bench vision runs.">
+  <title>mac-bench</title>
+  <meta name="description" content="Benchmark suite for local AI models on macOS. Vision and face recognition benchmarks with static HTML dashboards.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,7 +21,6 @@
       --accent-soft: rgba(184, 79, 50, 0.14);
       --teal: #236d6a;
       --gold: #a0771b;
-      --danger: #a63d40;
       --shadow: 0 24px 80px rgba(54, 36, 20, 0.14);
       --radius: 28px;
       --mono: "IBM Plex Mono", monospace;
@@ -31,47 +30,16 @@
       --hero-glow: rgba(184, 79, 50, 0.28);
       --card-bg: linear-gradient(180deg, rgba(255, 250, 244, 0.9), rgba(252, 245, 236, 0.76));
       --card-border: rgba(52, 41, 31, 0.08);
-      --row-bg: rgba(255, 252, 246, 0.76);
-      --row-hover: rgba(184, 79, 50, 0.04);
-      --prompt-bg: rgba(255, 252, 246, 0.72);
       --chip-bg: rgba(184, 79, 50, 0.08);
       --chip-border: rgba(184, 79, 50, 0.12);
       --pill-bg: rgba(255, 252, 246, 0.9);
       --pill-border: rgba(52, 41, 31, 0.1);
-      --track-bg: rgba(31, 26, 17, 0.08);
-      --track-border: rgba(52, 41, 31, 0.06);
-      --table-bg: rgba(255, 252, 246, 0.8);
-      --table-border: rgba(52, 41, 31, 0.09);
-      --th-bg: rgba(244, 239, 229, 0.82);
-      --empty-bg: rgba(255, 252, 246, 0.54);
-      --empty-border: rgba(52, 41, 31, 0.18);
-      --fact-bg: rgba(244, 239, 229, 0.72);
-      --fact-border: rgba(52, 41, 31, 0.07);
-      --details-bg: rgba(255, 252, 246, 0.82);
-      --details-border: rgba(52, 41, 31, 0.08);
-      --mini-bg: rgba(255, 252, 246, 0.78);
-      --mini-border: rgba(52, 41, 31, 0.08);
-      --rank-bg: linear-gradient(135deg, rgba(184, 79, 50, 0.16), rgba(35, 109, 106, 0.18));
       --grid-opacity: 0.08;
       --body-bg: linear-gradient(180deg, #f8f3ea 0%, var(--bg) 42%, #efe5d7 100%);
       --body-glow-a: rgba(184, 79, 50, 0.18);
       --body-glow-b: rgba(35, 109, 106, 0.18);
-      --chart-rect: rgba(255,252,246,0.42);
-      --chart-grid: rgba(52,41,31,0.12);
-      --chart-axis: rgba(31,26,23,0.7);
-      --chart-bar-bg: rgba(31,26,23,0.08);
-      --chart-bar-fg: rgba(184,79,50,0.82);
-      --stable-badge-color: #104341;
-      --stable-badge-bg: rgba(35, 109, 106, 0.12);
-      --stable-badge-border: rgba(35, 109, 106, 0.18);
-      --partial-badge-color: #6f5208;
-      --partial-badge-bg: rgba(160, 119, 27, 0.12);
-      --partial-badge-border: rgba(160, 119, 27, 0.2);
-      --failed-badge-color: #7d2226;
-      --failed-badge-bg: rgba(166, 61, 64, 0.12);
-      --failed-badge-border: rgba(166, 61, 64, 0.2);
-      --dot-stroke: rgba(31,26,23,0.55);
-      --chart-label: #1f1a17;
+      --fact-bg: rgba(244, 239, 229, 0.72);
+      --fact-border: rgba(52, 41, 31, 0.07);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -87,2110 +55,343 @@
         --accent-soft: rgba(224, 115, 79, 0.14);
         --teal: #52c4be;
         --gold: #d4a83a;
-        --danger: #e06868;
         --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
         --hero-bg: linear-gradient(135deg, rgba(28, 26, 22, 0.98), rgba(32, 28, 24, 0.9));
         --hero-glow: rgba(224, 115, 79, 0.15);
         --card-bg: linear-gradient(180deg, rgba(36, 33, 30, 0.9), rgba(30, 28, 25, 0.76));
         --card-border: rgba(255, 255, 255, 0.07);
-        --row-bg: rgba(36, 33, 30, 0.76);
-        --row-hover: rgba(224, 115, 79, 0.06);
-        --prompt-bg: rgba(28, 26, 22, 0.72);
         --chip-bg: rgba(224, 115, 79, 0.1);
         --chip-border: rgba(224, 115, 79, 0.16);
         --pill-bg: rgba(36, 33, 30, 0.9);
         --pill-border: rgba(255, 255, 255, 0.08);
-        --track-bg: rgba(255, 255, 255, 0.07);
-        --track-border: rgba(255, 255, 255, 0.04);
-        --table-bg: rgba(28, 26, 22, 0.8);
-        --table-border: rgba(255, 255, 255, 0.08);
-        --th-bg: rgba(22, 20, 18, 0.82);
-        --empty-bg: rgba(28, 26, 22, 0.54);
-        --empty-border: rgba(255, 255, 255, 0.14);
-        --fact-bg: rgba(22, 20, 18, 0.72);
-        --fact-border: rgba(255, 255, 255, 0.06);
-        --details-bg: rgba(28, 26, 22, 0.82);
-        --details-border: rgba(255, 255, 255, 0.08);
-        --mini-bg: rgba(36, 33, 30, 0.78);
-        --mini-border: rgba(255, 255, 255, 0.08);
-        --rank-bg: linear-gradient(135deg, rgba(224, 115, 79, 0.2), rgba(82, 196, 190, 0.2));
         --grid-opacity: 0.03;
         --body-bg: linear-gradient(180deg, #121110 0%, var(--bg) 42%, #1a1816 100%);
         --body-glow-a: rgba(224, 115, 79, 0.1);
         --body-glow-b: rgba(82, 196, 190, 0.1);
-        --chart-rect: rgba(28,26,22,0.42);
-        --chart-grid: rgba(255,255,255,0.1);
-        --chart-axis: rgba(255,255,255,0.5);
-        --chart-bar-bg: rgba(255,255,255,0.07);
-        --chart-bar-fg: rgba(224,115,79,0.85);
-        --stable-badge-color: #6ee0da;
-        --stable-badge-bg: rgba(82, 196, 190, 0.12);
-        --stable-badge-border: rgba(82, 196, 190, 0.22);
-        --partial-badge-color: #e8c460;
-        --partial-badge-bg: rgba(212, 168, 58, 0.12);
-        --partial-badge-border: rgba(212, 168, 58, 0.22);
-        --failed-badge-color: #f09090;
-        --failed-badge-bg: rgba(224, 104, 104, 0.12);
-        --failed-badge-border: rgba(224, 104, 104, 0.22);
-        --dot-stroke: rgba(255,255,255,0.4);
-        --chart-label: var(--ink);
+        --fact-bg: rgba(22, 20, 18, 0.72);
+        --fact-border: rgba(255, 255, 255, 0.06);
       }
     }
 
     [data-theme="dark"] {
-      --bg: #161413;
-      --bg-strong: #221f1d;
-      --panel: rgba(28, 26, 24, 0.92);
-      --panel-strong: rgba(34, 32, 28, 0.95);
-      --line: rgba(255, 255, 255, 0.1);
-      --ink: #e4dfda;
-      --muted: #968e86;
-      --accent: #e0734f;
-      --accent-soft: rgba(224, 115, 79, 0.14);
-      --teal: #52c4be;
-      --gold: #d4a83a;
-      --danger: #e06868;
+      --bg: #161413; --bg-strong: #221f1d;
+      --panel: rgba(28, 26, 24, 0.92); --panel-strong: rgba(34, 32, 28, 0.95);
+      --line: rgba(255, 255, 255, 0.1); --ink: #e4dfda; --muted: #968e86;
+      --accent: #e0734f; --accent-soft: rgba(224, 115, 79, 0.14);
+      --teal: #52c4be; --gold: #d4a83a;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
       --hero-bg: linear-gradient(135deg, rgba(28, 26, 22, 0.98), rgba(32, 28, 24, 0.9));
       --hero-glow: rgba(224, 115, 79, 0.15);
       --card-bg: linear-gradient(180deg, rgba(36, 33, 30, 0.9), rgba(30, 28, 25, 0.76));
       --card-border: rgba(255, 255, 255, 0.07);
-      --row-bg: rgba(36, 33, 30, 0.76);
-      --row-hover: rgba(224, 115, 79, 0.06);
-      --prompt-bg: rgba(28, 26, 22, 0.72);
-      --chip-bg: rgba(224, 115, 79, 0.1);
-      --chip-border: rgba(224, 115, 79, 0.16);
-      --pill-bg: rgba(36, 33, 30, 0.9);
-      --pill-border: rgba(255, 255, 255, 0.08);
-      --track-bg: rgba(255, 255, 255, 0.07);
-      --track-border: rgba(255, 255, 255, 0.04);
-      --table-bg: rgba(28, 26, 22, 0.8);
-      --table-border: rgba(255, 255, 255, 0.08);
-      --th-bg: rgba(22, 20, 18, 0.82);
-      --empty-bg: rgba(28, 26, 22, 0.54);
-      --empty-border: rgba(255, 255, 255, 0.14);
-      --fact-bg: rgba(22, 20, 18, 0.72);
-      --fact-border: rgba(255, 255, 255, 0.06);
-      --details-bg: rgba(28, 26, 22, 0.82);
-      --details-border: rgba(255, 255, 255, 0.08);
-      --mini-bg: rgba(36, 33, 30, 0.78);
-      --mini-border: rgba(255, 255, 255, 0.08);
-      --rank-bg: linear-gradient(135deg, rgba(224, 115, 79, 0.2), rgba(82, 196, 190, 0.2));
+      --chip-bg: rgba(224, 115, 79, 0.1); --chip-border: rgba(224, 115, 79, 0.16);
+      --pill-bg: rgba(36, 33, 30, 0.9); --pill-border: rgba(255, 255, 255, 0.08);
       --grid-opacity: 0.03;
       --body-bg: linear-gradient(180deg, #121110 0%, var(--bg) 42%, #1a1816 100%);
-      --body-glow-a: rgba(224, 115, 79, 0.1);
-      --body-glow-b: rgba(82, 196, 190, 0.1);
-      --chart-rect: rgba(28,26,22,0.42);
-      --chart-grid: rgba(255,255,255,0.1);
-      --chart-axis: rgba(255,255,255,0.5);
-      --chart-bar-bg: rgba(255,255,255,0.07);
-      --chart-bar-fg: rgba(224,115,79,0.85);
-      --stable-badge-color: #6ee0da;
-      --stable-badge-bg: rgba(82, 196, 190, 0.12);
-      --stable-badge-border: rgba(82, 196, 190, 0.22);
-      --partial-badge-color: #e8c460;
-      --partial-badge-bg: rgba(212, 168, 58, 0.12);
-      --partial-badge-border: rgba(212, 168, 58, 0.22);
-      --failed-badge-color: #f09090;
-      --failed-badge-bg: rgba(224, 104, 104, 0.12);
-      --failed-badge-border: rgba(224, 104, 104, 0.22);
-      --dot-stroke: rgba(255,255,255,0.4);
-      --chart-label: var(--ink);
+      --body-glow-a: rgba(224, 115, 79, 0.1); --body-glow-b: rgba(82, 196, 190, 0.1);
+      --fact-bg: rgba(22, 20, 18, 0.72); --fact-border: rgba(255, 255, 255, 0.06);
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
-      color: var(--ink);
-      font-family: var(--body);
-      background:
-        radial-gradient(circle at top left, var(--body-glow-a), transparent 32%),
+      margin: 0; color: var(--ink); font-family: var(--body);
+      background: radial-gradient(circle at top left, var(--body-glow-a), transparent 32%),
         radial-gradient(circle at top right, var(--body-glow-b), transparent 28%),
         var(--body-bg);
       min-height: 100vh;
     }
-
     body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
+      content: ""; position: fixed; inset: 0; pointer-events: none;
       opacity: var(--grid-opacity);
-      background-image:
-        linear-gradient(rgba(31, 26, 23, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(31, 26, 23, 0.05) 1px, transparent 1px);
+      background-image: linear-gradient(rgba(31,26,23,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,26,23,0.05) 1px, transparent 1px);
       background-size: 36px 36px;
       mask-image: radial-gradient(circle at center, black 55%, transparent 88%);
     }
-
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .page {
-      width: min(1240px, calc(100vw - 32px));
-      margin: 0 auto;
-      padding: 28px 0 64px;
-      position: relative;
-      z-index: 1;
+      width: min(1240px, calc(100vw - 32px)); margin: 0 auto;
+      padding: 48px 0 80px; position: relative; z-index: 1;
     }
 
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
     }
 
     .hero {
-      padding: 28px;
-      position: relative;
-      overflow: hidden;
-      background: var(--hero-bg), var(--panel);
+      padding: 48px 40px; position: relative; overflow: hidden;
+      background: var(--hero-bg), var(--panel); text-align: center;
     }
-
     .hero::after {
-      content: "";
-      position: absolute;
-      width: 320px;
-      height: 320px;
-      right: -96px;
-      top: -140px;
-      border-radius: 50%;
+      content: ""; position: absolute; width: 420px; height: 420px;
+      right: -120px; top: -180px; border-radius: 50%;
       background: radial-gradient(circle at center, var(--hero-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero::before {
+      content: ""; position: absolute; width: 320px; height: 320px;
+      left: -100px; bottom: -160px; border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(35, 109, 106, 0.15), transparent 70%);
       pointer-events: none;
     }
 
     .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 2;
-      background: var(--pill-bg);
-      border: 1px solid var(--pill-border);
-      border-radius: 999px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font: 500 0.78rem/1 var(--mono);
-      color: var(--muted);
+      position: absolute; top: 20px; right: 20px; z-index: 2;
+      background: var(--pill-bg); border: 1px solid var(--pill-border);
+      border-radius: 999px; padding: 8px 14px; cursor: pointer;
+      font: 500 0.78rem/1 var(--mono); color: var(--muted);
       transition: background 0.2s, color 0.2s;
     }
-
-    .theme-toggle:hover {
-      color: var(--ink);
-      background: var(--card-bg);
-    }
+    .theme-toggle:hover { color: var(--ink); background: var(--card-bg); }
 
     .eyebrow {
-      font: 600 0.72rem/1.2 var(--mono);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 14px;
-    }
-
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-      font-family: var(--display);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    h1 {
-      font-size: clamp(2.3rem, 5vw, 4.8rem);
-      line-height: 0.94;
-      max-width: 9ch;
-    }
-
-    .hero-copy {
-      max-width: 70ch;
-      margin-top: 16px;
-      font-size: 1.02rem;
-      line-height: 1.72;
-      color: var(--muted);
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .meta-pill,
-    .stat-note,
-    .badge,
-    .mini-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      line-height: 1;
-    }
-
-    .meta-pill {
-      padding: 10px 14px;
-      background: var(--pill-bg);
-      border: 1px solid var(--pill-border);
-    }
-
-    .layout {
-      display: grid;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .split {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .panel-body {
-      padding: 24px;
-    }
-
-    .section-kicker {
-      font: 600 0.74rem/1.2 var(--mono);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 16px;
-    }
-
-    .summary-card {
-      padding: 18px;
-      border-radius: 22px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-    }
-
-    .summary-label {
-      font: 500 0.74rem/1.2 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-    }
-
-    .summary-value {
-      margin-top: 10px;
-      font-family: var(--display);
-      font-size: clamp(1.3rem, 2.2vw, 2.1rem);
-      line-height: 1;
-    }
-
-    .summary-subtext {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
-
-    .prompt-box {
-      background: var(--prompt-bg);
-      border: 1px solid var(--pill-border);
-      border-radius: 22px;
-      padding: 18px;
-      white-space: pre-wrap;
-      font-size: 0.95rem;
-      line-height: 1.72;
-      color: var(--ink);
-    }
-
-    .profiles {
-      margin-top: 14px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .profile-chip {
-      min-width: 180px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: var(--chip-bg);
-      border: 1px solid var(--chip-border);
-    }
-
-    .profile-chip strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .sample-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .sample-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 12px;
-    }
-
-    .sample-thumb {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      border: 0;
-      border-radius: 16px;
-      overflow: hidden;
-      padding: 0;
-      cursor: zoom-in;
-      background: rgba(31, 26, 17, 0.08);
-    }
-
-    .sample-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .sample-title {
-      margin-top: 10px;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .sample-meta {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.5;
-    }
-
-    .leaderboard {
-      display: grid;
-      gap: 12px;
-    }
-
-    .leader-row {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      padding: 14px 16px;
-      border-radius: 20px;
-      background: var(--row-bg);
-      border: 1px solid var(--card-border);
-    }
-
-    .rank {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font: 600 0.88rem/1 var(--mono);
-      background: var(--rank-bg);
-      color: var(--ink);
-      flex-shrink: 0;
-    }
-
-    .leader-name {
-      font-weight: 600;
-      font-size: 1rem;
-      line-height: 1.35;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .model-link {
-      color: var(--accent);
-      text-decoration: none;
-      transition: opacity 0.15s;
-    }
-
-    .model-link:hover {
-      opacity: 0.75;
-      text-decoration: underline;
-    }
-
-    .leader-meta {
-      color: var(--muted);
-      margin-top: 4px;
-      font-size: 0.92rem;
-    }
-
-    .leader-score {
-      text-align: right;
-    }
-
-    .leader-score strong {
-      display: block;
-      font-family: var(--display);
-      font-size: 1.55rem;
-      line-height: 1;
-    }
-
-    .chart-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 18px;
-    }
-
-    .chart-stack {
-      display: grid;
-      gap: 18px;
-    }
-
-    .chart-shell {
-      min-height: 280px;
-    }
-
-    .chart-shell svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .chart-bars {
-      display: grid;
-      gap: 14px;
-    }
-
-    .metric-row {
-      display: grid;
-      grid-template-columns: minmax(0, 220px) minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .metric-label {
-      font-size: 0.94rem;
-      line-height: 1.45;
-      overflow-wrap: anywhere;
-    }
-
-    .metric-value {
-      font: 500 0.84rem/1.2 var(--mono);
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .chart-caption {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.55;
-    }
-
-    .empty-state {
-      min-height: 220px;
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-      border: 1px dashed var(--empty-border);
-      border-radius: 22px;
-      background: var(--empty-bg);
-      text-align: center;
-      padding: 18px;
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .mini-badge {
-      padding: 9px 12px;
-      background: var(--mini-bg);
-      border: 1px solid var(--mini-border);
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex: none;
-    }
-
-    .dot.stable {
-      background: var(--teal);
-    }
-
-    .dot.partial {
-      background: var(--gold);
-    }
-
-    .dot.failed {
-      background: var(--danger);
-    }
-
-    .reliability-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .reliability-row {
-      display: grid;
-      grid-template-columns: minmax(0, 220px) minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .reliability-row .leader-name {
-      white-space: normal;
-      overflow: visible;
-    }
-
-    .track {
-      width: 100%;
-      height: 16px;
-      border-radius: 999px;
-      background: var(--track-bg);
-      overflow: hidden;
-      border: 1px solid var(--track-border);
-    }
-
-    .track-fill {
-      height: 100%;
-      border-radius: inherit;
-    }
-
-    .track-fill.stable {
-      background: linear-gradient(90deg, rgba(35, 109, 106, 0.96), rgba(70, 146, 143, 0.88));
-    }
-
-    .track-fill.partial {
-      background: linear-gradient(90deg, rgba(160, 119, 27, 0.96), rgba(205, 164, 72, 0.88));
-    }
-
-    .track-fill.failed {
-      background: linear-gradient(90deg, rgba(166, 61, 64, 0.96), rgba(214, 111, 104, 0.88));
-    }
-
-    .status-note {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.4;
-    }
-
-    .table-wrap {
-      overflow: auto;
-      border-radius: 22px;
-      border: 1px solid var(--table-border);
-      background: var(--table-bg);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 820px;
-    }
-
-    th,
-    td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--card-border);
-      text-align: left;
-      vertical-align: top;
-      font-size: 0.94rem;
-    }
-
-    th {
-      font: 600 0.75rem/1.2 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      background: var(--th-bg);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    tbody tr:hover {
-      background: var(--row-hover);
-    }
-
-    .num {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    code,
-    .mono {
-      font-family: var(--mono);
-    }
-
-    .badge {
-      padding: 8px 12px;
-      border: 1px solid transparent;
-    }
-
-    .badge.stable {
-      color: var(--stable-badge-color);
-      background: var(--stable-badge-bg);
-      border-color: var(--stable-badge-border);
-    }
-
-    .badge.partial {
-      color: var(--partial-badge-color);
-      background: var(--partial-badge-bg);
-      border-color: var(--partial-badge-border);
-    }
-
-    .badge.failed {
-      color: var(--failed-badge-color);
-      background: var(--failed-badge-bg);
-      border-color: var(--failed-badge-border);
-    }
-
-    .details-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    details {
-      border: 1px solid var(--details-border);
-      border-radius: 22px;
-      background: var(--details-bg);
-      overflow: hidden;
-    }
-
-    summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .details-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .details-meta {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .details-body {
-      padding: 0 20px 20px;
-    }
-
-    .fact-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .fact {
-      padding: 14px;
-      border-radius: 18px;
-      background: var(--fact-bg);
-      border: 1px solid var(--fact-border);
-    }
-
-    .fact strong {
-      display: block;
-      margin-bottom: 6px;
-      font: 600 0.72rem/1.2 var(--mono);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .response-cell {
-      max-width: 440px;
-      line-height: 1.55;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
-    .result-image-cell {
-      min-width: 220px;
-    }
-
-    .result-image {
-      display: grid;
-      grid-template-columns: 92px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-    }
-
-    .result-thumb {
-      width: 92px;
-      aspect-ratio: 4 / 3;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 0;
-      padding: 0;
-      cursor: zoom-in;
-      background: rgba(31, 26, 17, 0.08);
-    }
-
-    .result-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .result-image-meta {
-      display: grid;
-      gap: 6px;
-    }
-
-    .result-image-title {
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .result-image-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-
-    .text-link {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .text-link:hover {
-      text-decoration: underline;
-    }
-
-    .section-desc {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.6;
-      margin-top: 6px;
-      margin-bottom: 14px;
-      max-width: 70ch;
-    }
-
-    .scatter-legend {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 6px 16px;
-      margin-top: 14px;
-    }
-
-    .scatter-legend-item {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-    .scatter-num {
-      display: inline-flex;
-      align-items: center;
+      font: 600 0.72rem/1.2 var(--mono); letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .hero-title {
+      font: 700 clamp(2rem, 4vw, 3rem)/1.12 var(--display);
+      margin: 0 0 16px;
+    }
+    .hero-sub {
+      font: 400 1.05rem/1.7 var(--body); color: var(--muted);
+      margin: 0 auto; max-width: 640px;
+    }
+    .hero-chips {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
       justify-content: center;
-      min-width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font: 600 0.72rem/1 var(--mono);
-      color: white;
-      flex-shrink: 0;
     }
-
-    .footer-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .image-modal {
-      width: min(1100px, calc(100vw - 32px));
-      max-height: calc(100vh - 32px);
-      border: 1px solid var(--details-border);
-      border-radius: 28px;
-      padding: 0;
-      background: var(--panel-strong);
-      color: var(--ink);
-      box-shadow: var(--shadow);
-    }
-
-    .image-modal::backdrop {
-      background: rgba(14, 10, 7, 0.72);
-      backdrop-filter: blur(8px);
-    }
-
-    .image-modal-body {
-      padding: 18px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .image-modal-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .image-modal-close {
-      border: 1px solid var(--pill-border);
-      background: var(--pill-bg);
-      color: var(--ink);
-      border-radius: 999px;
-      padding: 8px 12px;
-      cursor: pointer;
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
       font: 500 0.78rem/1 var(--mono);
+      background: var(--chip-bg); border: 1px solid var(--chip-border);
+      border-radius: 999px; padding: 6px 14px;
     }
 
-    .image-modal-figure {
-      margin: 0;
-      border-radius: 20px;
-      overflow: hidden;
-      background: rgba(31, 26, 17, 0.08);
+    .section { margin-top: 40px; }
+    .section-title {
+      font: 600 1.3rem/1.3 var(--display); margin: 0 0 20px;
+      text-align: center;
     }
 
-    .image-modal-figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: calc(100vh - 220px);
-      object-fit: contain;
-      background: rgba(31, 26, 17, 0.08);
+    .bench-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
     }
 
-    .image-modal-caption {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
+    .bench-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 22px; padding: 32px; backdrop-filter: blur(8px);
+      text-decoration: none; display: block;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .bench-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 100px rgba(54, 36, 20, 0.18);
+      border-color: var(--accent);
+    }
+    .bench-card::after {
+      content: ""; position: absolute; width: 200px; height: 200px;
+      right: -60px; top: -80px; border-radius: 50%; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .bench-card.vision::after {
+      background: radial-gradient(circle, rgba(184, 79, 50, 0.12), transparent 70%);
+    }
+    .bench-card.face::after {
+      background: radial-gradient(circle, rgba(35, 109, 106, 0.15), transparent 70%);
     }
 
-    @media (max-width: 1080px) {
-      .split,
-      .chart-grid {
-        grid-template-columns: 1fr;
-      }
+    .card-icon {
+      font-size: 2.4rem; margin-bottom: 16px; display: block;
+    }
+    .card-eyebrow {
+      font: 600 0.68rem/1.2 var(--mono); letter-spacing: 0.15em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .bench-card.vision .card-eyebrow { color: var(--accent); }
+    .bench-card.face .card-eyebrow { color: var(--teal); }
 
-      .summary-grid,
-      .fact-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .card-title {
+      font: 700 1.4rem/1.2 var(--display); margin: 0 0 10px;
+    }
+    .card-desc {
+      font: 400 0.9rem/1.6 var(--body); color: var(--muted); margin: 0 0 20px;
     }
 
-    @media (max-width: 720px) {
-      .page {
-        width: min(100vw - 20px, 1240px);
-        padding-top: 12px;
-      }
+    .card-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .stat {
+      background: var(--fact-bg); border: 1px solid var(--fact-border);
+      border-radius: 12px; padding: 10px 14px;
+    }
+    .stat-label {
+      font: 500 0.62rem/1.2 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 3px;
+    }
+    .stat-value {
+      font: 600 1rem/1.2 var(--display);
+    }
+    .bench-card.vision .stat-value { color: var(--accent); }
+    .bench-card.face .stat-value { color: var(--teal); }
 
-      .hero,
-      .panel-body {
-        padding: 18px;
-      }
+    .card-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      font: 500 0.82rem/1 var(--mono); margin-top: 20px;
+      padding: 8px 18px; border-radius: 999px;
+      transition: background 0.2s;
+    }
+    .bench-card.vision .card-cta {
+      color: var(--accent); background: var(--accent-soft);
+    }
+    .bench-card.face .card-cta {
+      color: var(--teal); background: rgba(35, 109, 106, 0.1);
+    }
+    .card-cta .arrow { transition: transform 0.2s; }
+    .bench-card:hover .card-cta .arrow { transform: translateX(4px); }
 
-      .summary-grid,
-      .fact-grid {
-        grid-template-columns: 1fr;
-      }
+    .story {
+      margin-top: 40px; padding: 32px 40px;
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); backdrop-filter: blur(14px);
+    }
+    .story-title {
+      font: 600 1.1rem/1.3 var(--display); margin: 0 0 12px;
+    }
+    .story p {
+      font: 400 0.92rem/1.7 var(--body); color: var(--muted); margin: 0 0 12px;
+    }
+    .story p:last-child { margin-bottom: 0; }
+    .story strong { color: var(--ink); }
 
-      .reliability-row {
-        grid-template-columns: 1fr;
-      }
+    .footer {
+      margin-top: 48px; text-align: center;
+      font: 400 0.78rem/1.5 var(--mono); color: var(--muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
 
-      .metric-row {
-        grid-template-columns: 1fr;
-      }
-
-      .result-image {
-        grid-template-columns: 1fr;
-      }
-
-      .result-thumb {
-        width: 100%;
-        max-width: 220px;
-      }
-
-      h1 {
-        max-width: none;
-      }
+    @media (max-width: 700px) {
+      .hero { padding: 32px 20px; }
+      .bench-grid { grid-template-columns: 1fr; }
+      .bench-card { padding: 24px; }
+      .story { padding: 24px 20px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <header class="panel hero">
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">Light / Dark</button>
-      <div class="eyebrow">Vision Benchmark Report</div>
-      <h1 id="page-title">mac-bench Vision Benchmark</h1>
-      <p class="hero-copy" id="hero-copy">
-        Automated local benchmark comparing vision-capable LLMs on Mac mini / Apple M4 Pro / 64 GB RAM.
-        Each model was asked to describe the same set of images, and we measured latency, memory use, throughput, and reliability. 20 stable results
+    <div class="panel hero">
+      <button class="theme-toggle" onclick="toggleTheme()">Toggle theme</button>
+      <div class="eyebrow">Benchmark Suite</div>
+      <h1 class="hero-title">mac-bench</h1>
+      <p class="hero-sub">
+        Benchmarking local AI models on a Mac mini. No cloud, no subscriptions &mdash; everything runs on-device. Static dashboards with charts, leaderboards, and detailed breakdowns.
       </p>
-      <div class="hero-meta" id="hero-meta"></div>
-      <div class="summary-grid" id="summary-grid"></div>
-    </header>
+      <div class="hero-chips">
+        <span class="chip">Mac mini</span>
+        <span class="chip">Apple M4 Pro</span>
+        <span class="chip">64 GB RAM</span>
+        <span class="chip">2 benchmark suites</span>
+      </div>
+    </div>
 
-    <div class="layout">
-      <section class="split">
-        <article class="panel panel-body">
-          <div class="section-kicker">Prompt</div>
-          <h2>What the run actually asked</h2>
-          <p class="section-desc">Every model received the exact same prompt and images. The prompt below was sent as the user message alongside each test image.</p>
-          <div class="prompt-box" id="prompt-box"></div>
-          <div class="profiles" id="profiles"></div>
-          <div class="sample-gallery" id="sample-gallery"></div>
-        </article>
-        <article class="panel panel-body">
-          <div class="section-kicker">Leaderboard</div>
-          <h2>Fastest reliable results</h2>
-          <p class="section-desc">Top 5 models that successfully processed every image, ranked by average response time. Click a model name to view it in LM Studio.</p>
-          <div class="leaderboard" id="leaderboard"></div>
-          <p class="footer-note">
-            Ranking favors fully successful runs first, then lower average latency and lower memory use.
+    <div class="section">
+      <h2 class="section-title">Benchmarks</h2>
+      <div class="bench-grid">
+        <a href="vision/" class="bench-card vision">
+          <span class="card-icon">&#128065;</span>
+          <div class="card-eyebrow">Vision</div>
+          <h3 class="card-title">Image Description Benchmark</h3>
+          <p class="card-desc">
+            Send a doorbell camera photo to local LLMs via LM Studio and measure how fast and accurately they describe what they see. 5 models, 5 images, ranked by latency and quality.
           </p>
-        </article>
-      </section>
-
-      <section class="chart-grid">
-        <article class="panel panel-body">
-          <div class="section-kicker">Speed vs Size</div>
-          <h2>Latency vs memory footprint</h2>
-          <p class="section-desc">Each bubble is a model. Position shows the trade-off between response speed (vertical) and RAM usage (horizontal). Bubble size reflects token throughput. Ideal models sit in the bottom-left corner: fast and light.</p>
-          <div class="chart-shell" id="scatter-chart"></div>
-          <div class="legend">
-            <span class="mini-badge"><span class="dot stable"></span> Stable (all images OK)</span>
-            <span class="mini-badge"><span class="dot partial"></span> Partial (some failures)</span>
-            <span class="mini-badge"><span class="dot failed"></span> Failed (no successes)</span>
+          <div class="card-stats">
+            <div class="stat">
+              <div class="stat-label">Winner</div>
+              <div class="stat-value">ministral-3b</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Best Latency</div>
+              <div class="stat-value">2.76s</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Models Tested</div>
+              <div class="stat-value">5</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Winner RAM</div>
+              <div class="stat-value">2.78 GiB</div>
+            </div>
           </div>
-        </article>
-        <div class="chart-stack">
-          <article class="panel panel-body">
-            <div class="section-kicker">Latency</div>
-            <h2>Average response time</h2>
-            <p class="section-desc">How long each stable model takes on average to describe an image. Shorter bars are faster.</p>
-            <div class="chart-shell" id="latency-chart"></div>
-          </article>
-          <article class="panel panel-body">
-            <div class="section-kicker">Reliability</div>
-            <h2>Success rate by model</h2>
-            <p class="section-desc">What fraction of test images each model handled without errors. A full bar means every image got a valid response.</p>
-            <div class="reliability-list" id="reliability-chart"></div>
-          </article>
-        </div>
-      </section>
+          <span class="card-cta">View dashboard <span class="arrow">&#8594;</span></span>
+        </a>
 
-      <section class="chart-grid">
-        <article class="panel panel-body">
-          <div class="section-kicker">Memory</div>
-          <h2>RAM usage comparison</h2>
-          <p class="section-desc">How much system memory each model requires when loaded. Lower is better, especially on machines with limited RAM.</p>
-          <div class="chart-shell" id="memory-chart"></div>
-        </article>
-        <article class="panel panel-body">
-          <div class="section-kicker">Throughput</div>
-          <h2>Token generation speed</h2>
-          <p class="section-desc">How many completion tokens each model generates per second. Higher throughput means faster, more detailed responses.</p>
-          <div class="chart-shell" id="throughput-chart"></div>
-        </article>
-      </section>
+        <a href="face-recognition/" class="bench-card face">
+          <span class="card-icon">&#129489;</span>
+          <div class="card-eyebrow">Face Recognition</div>
+          <h3 class="card-title">Face Verification Benchmark</h3>
+          <p class="card-desc">
+            Test local face recognition libraries on LFW verification pairs. Compare accuracy, speed, and RAM usage across InsightFace, DeepFace backends, and more.
+          </p>
+          <div class="card-stats">
+            <div class="stat">
+              <div class="stat-label">Winner</div>
+              <div class="stat-value">InsightFace</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Best Accuracy</div>
+              <div class="stat-value">100%</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Models Tested</div>
+              <div class="stat-value">5</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Best Speed</div>
+              <div class="stat-value">0.18s/pair</div>
+            </div>
+          </div>
+          <span class="card-cta">View dashboard <span class="arrow">&#8594;</span></span>
+        </a>
+      </div>
+    </div>
 
-      <section class="chart-grid">
-        <article class="panel panel-body">
-          <div class="section-kicker">Efficiency</div>
-          <h2>Tokens per second per GiB</h2>
-          <p class="section-desc">A combined efficiency metric: how many tokens each model generates per second for each GiB of RAM it uses. Higher is better — it rewards models that are both fast and lightweight.</p>
-          <div class="chart-shell" id="efficiency-chart"></div>
-        </article>
-        <article class="panel panel-body">
-          <div class="section-kicker">Load Time</div>
-          <h2>Model loading speed</h2>
-          <p class="section-desc">How long each model takes to load into memory from disk. Shorter load times mean faster cold starts.</p>
-          <div class="chart-shell" id="load-time-chart"></div>
-        </article>
-      </section>
+    <div class="story">
+      <h3 class="story-title">Why this exists</h3>
+      <p>
+        I bought a <strong>Mac mini</strong> (M4 Pro, 64 GB) to run <strong>Home Assistant</strong> and handle everything locally &mdash; no cloud, no subscriptions, no sending camera feeds to someone else's servers. The first thing I wanted was a vision model that could look at my doorbell camera and tell me <em>"there's a person with a package at the door"</em> in a sentence or two.
+      </p>
+      <p>
+        I figured I'd benchmark a few tiny local models before buying any extra hardware, just to see if any of them were even usable. Turns out, <strong>some of them are surprisingly good</strong>. A 3-billion-parameter model describes doorbell snapshots in under 3 seconds, using less than 3 GB of RAM. That was enough to make me want to benchmark everything I could find.
+      </p>
+      <p>
+        Face recognition was the natural next step &mdash; if the camera can describe who it sees, can it also tell me <em>who</em> that person is? InsightFace nailed 100% accuracy on the LFW verification pairs, running locally in under 200ms per comparison. All on the same Mac mini, no GPU required.
+      </p>
+    </div>
 
-      <section class="panel panel-body">
-        <div class="section-kicker">Latency Spread</div>
-        <h2>Min / Median / Max latency per model</h2>
-        <p class="section-desc">Shows the range of response times across images for each stable model. A tight spread indicates consistent performance; a wide spread means the model is sensitive to image complexity.</p>
-        <div class="chart-shell" id="latency-spread-chart"></div>
-      </section>
-
-      <section class="panel panel-body">
-        <div class="section-kicker">Heatmap</div>
-        <h2>Per-image latency heatmap</h2>
-        <p class="section-desc">Each cell shows how long a model took to respond to a specific image. Darker cells mean slower responses. Helps identify which images are hardest for each model.</p>
-        <div class="chart-shell" id="latency-heatmap" style="overflow-x:auto"></div>
-      </section>
-
-      <section class="chart-grid">
-        <article class="panel panel-body">
-          <div class="section-kicker">Format Comparison</div>
-          <h2>GGUF vs safetensors performance</h2>
-          <p class="section-desc">Average latency and throughput grouped by model format. Compares how different weight formats perform on Apple Silicon.</p>
-          <div class="chart-shell" id="format-comparison-chart"></div>
-        </article>
-        <article class="panel panel-body">
-          <div class="section-kicker">Speed Tiers</div>
-          <h2>Models by response time tier</h2>
-          <p class="section-desc">Models grouped into speed tiers: under 2s (real-time), 2–5s (interactive), and 5s+ (batch). The green zone marks the sub-2-second target.</p>
-          <div class="chart-shell" id="speed-tier-chart"></div>
-        </article>
-      </section>
-
-      <section class="panel panel-body">
-        <div class="section-kicker">Responses</div>
-        <h2>Side-by-side response comparison</h2>
-        <p class="section-desc">For each test image, compare what every model actually said. Useful for judging response quality and accuracy beyond just speed.</p>
-        <div class="details-list" id="response-comparison"></div>
-      </section>
-
-      <section class="panel panel-body">
-        <div class="section-kicker">Summary Table</div>
-        <h2>All benchmarked results</h2>
-        <p class="section-desc">Full metrics for every model tested. Click a model name to open it in LM Studio. RAM is the memory used while the model is loaded; Avg/Median are per-image response times; Tok/s is completion token throughput.</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Result</th>
-                <th>Format</th>
-                <th class="num">RAM GiB</th>
-                <th class="num">Avg s</th>
-                <th class="num">Median s</th>
-                <th class="num">Tok/s</th>
-                <th>Success</th>
-                <th>Reasoning</th>
-              </tr>
-            </thead>
-            <tbody id="summary-table"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="panel panel-body">
-        <div class="section-kicker">Model Detail</div>
-        <h2>Per-image outputs</h2>
-        <p class="section-desc">Expand any model to see exactly how it responded to each test image, including timing, token counts, and the raw response text.</p>
-        <div class="details-list" id="model-details"></div>
-      </section>
+    <div class="footer">
+      <p>
+        Source code on <a href="https://github.com/araa47/mac-bench">GitHub</a>.
+        Built with local models, for local models.
+      </p>
     </div>
   </div>
 
-  <dialog class="image-modal" id="image-modal">
-    <div class="image-modal-body">
-      <div class="image-modal-head">
-        <div>
-          <div class="section-kicker">Benchmark Image</div>
-          <h3 id="image-modal-title">Image preview</h3>
-        </div>
-        <button class="image-modal-close" id="image-modal-close" type="button">Close</button>
-      </div>
-      <figure class="image-modal-figure">
-        <img id="image-modal-img" alt="">
-      </figure>
-      <div class="image-modal-caption" id="image-modal-caption"></div>
-    </div>
-  </dialog>
-
-  <script id="benchmark-data" type="application/json">{"started_at": "2026-03-24T09:27:28.712466+00:00", "finished_at": "2026-03-24T09:48:58.417481+00:00", "prompt": "Describe only the visible person or people in this image in 1 to 2 short sentences. Mention clothing, hats, glasses, masks, shoes, bags, boxes, phones, packages, or other objects they are wearing or carrying. Do not mention the environment, house, porch, background, weather, doorway, camera overlay, or timestamp text unless it is strictly necessary to identify an object on the person. If something is uncertain, say probably or possibly. If no person is visible, reply with exactly: No person visible.", "machine": {"platform": "macOS-26.3.1-arm64-arm-64bit-Mach-O", "python": "3.13.12", "system": "Darwin", "total_memory_gb": 64, "chip": "Apple M4 Pro", "model_name": "Mac mini"}, "images": [{"label": "sample-01.jpg", "report_path": "images/sample-01.jpg"}, {"label": "sample-02.jpg", "report_path": "images/sample-02.jpg"}, {"label": "sample-03.jpg", "report_path": "images/sample-03.jpg"}, {"label": "sample-04.jpg", "report_path": "images/sample-04.jpg"}, {"label": "sample-05.jpg", "report_path": "images/sample-05.jpg"}], "request_profiles": [{"name": "default", "prompt_text": "Describe only the visible person or people in this image in 1 to 2 short sentences. Mention clothing, hats, glasses, masks, shoes, bags, boxes, phones, packages, or other objects they are wearing or carrying. Do not mention the environment, house, porch, background, weather, doorway, camera overlay, or timestamp text unless it is strictly necessary to identify an object on the person. If something is uncertain, say probably or possibly. If no person is visible, reply with exactly: No person visible.", "temperature": 0.0, "max_tokens": 160, "extra_body": {}}], "summary": {"memory_target_gib": 32.0, "model_count": 28, "stable_model_count": 20, "recommended_model": "liquid/lfm2.5-1.2b", "recommended_profile": "default", "recommended_model_avg_latency_seconds": 0.359, "recommended_model_reason": "Fastest stable result within the 32 GiB target.", "smallest_stable_model": "liquid/lfm2.5-1.2b", "smallest_stable_profile": "default", "smallest_stable_model_memory_gib": 1.16}, "models": [{"model_key": "liquid/lfm2.5-1.2b", "display_name": "Lfm2.5 1.2B", "identifier": "bench-liquid-lfm2-5-1-2b", "profile_name": "default", "format": "safetensors", "params": "1.2B", "variant": "liquid/lfm2.5-1.2b@8bit", "estimated_gpu_memory_gib": 1.63, "estimated_total_memory_gib": 1.63, "load_time_seconds": 2.21, "reported_memory_gib": 1.16, "average_latency_seconds": 0.359, "median_latency_seconds": 0.35, "min_latency_seconds": 0.341, "max_latency_seconds": 0.396, "completion_tokens_per_second": 80.87, "total_prompt_tokens": 590, "total_completion_tokens": 145, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.396, "prompt_tokens": 118, "completion_tokens": 29, "total_tokens": 147, "response_text": "Probably a person wearing casual clothing, possibly with a hat and glasses; they might have a mask on and carrying a bag or phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.341, "prompt_tokens": 118, "completion_tokens": 29, "total_tokens": 147, "response_text": "Probably a person wearing casual clothing, possibly with a hat and glasses; they might have a mask on and carrying a bag or phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.35, "prompt_tokens": 118, "completion_tokens": 29, "total_tokens": 147, "response_text": "Probably a person wearing casual clothing, possibly with a hat and glasses; they might have a mask on and carrying a bag or phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.357, "prompt_tokens": 118, "completion_tokens": 29, "total_tokens": 147, "response_text": "Probably a person wearing casual clothing, possibly with a hat and glasses; they might have a mask on and carrying a bag or phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.349, "prompt_tokens": 118, "completion_tokens": 29, "total_tokens": 147, "response_text": "Probably a person wearing casual clothing, possibly with a hat and glasses; they might have a mask on and carrying a bag or phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "smolvlm2-2.2b-instruct-mlx", "display_name": "SmolVLM2 2.2B Instruct", "identifier": "bench-smolvlm2-2-2b-instruct-mlx", "profile_name": "default", "format": "safetensors", "params": "2.2B", "variant": null, "estimated_gpu_memory_gib": null, "estimated_total_memory_gib": null, "load_time_seconds": null, "reported_memory_gib": null, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 0, "successful_images": 0, "failed_images": 0, "reasoning_seen": false, "benchmark_error": "Command failed (1): /Users/rex/.lmstudio/bin/lms load smolvlm2-2.2b-instruct-mlx -y --identifier bench-smolvlm2-2-2b-instruct-mlx\n\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-2.2b-instruct-mlx ⠼\n\u001b[K\u001b[?25hError: Failed to load model. \n\n\n   (X) CAUSE  \n\nError when loading model: ImportError: Package `num2words` is required to run SmolVLM processor. Install it with `pip install num2words`.\n", "results": []}, {"model_key": "internvl3_5-1b", "display_name": "InternVL3 5 1B", "identifier": "bench-internvl3-5-1b", "profile_name": "default", "format": "safetensors", "params": "1B", "variant": null, "estimated_gpu_memory_gib": null, "estimated_total_memory_gib": null, "load_time_seconds": null, "reported_memory_gib": null, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 0, "successful_images": 0, "failed_images": 0, "reasoning_seen": false, "benchmark_error": "Command failed (1): /Users/rex/.lmstudio/bin/lms load internvl3_5-1b -y --identifier bench-internvl3-5-1b\n\u001b[?25l\nLoading internvl3_5-1b ⠙\u001b[?25l\nLoading internvl3_5-1b ⠹\u001b[?25l\nLoading internvl3_5-1b ⠸\u001b[?25l\nLoading internvl3_5-1b ⠼\u001b[?25l\nLoading internvl3_5-1b ⠴\u001b[?25l\nLoading internvl3_5-1b ⠦\u001b[?25l\nLoading internvl3_5-1b ⠧\u001b[?25l\nLoading internvl3_5-1b ⠇\u001b[?25l\nLoading internvl3_5-1b ⠏\u001b[?25l\nLoading internvl3_5-1b ⠋\u001b[?25l\nLoading internvl3_5-1b ⠙\u001b[?25l\nLoading internvl3_5-1b ⠹\u001b[?25l\nLoading internvl3_5-1b ⠸\u001b[?25l\nLoading internvl3_5-1b ⠼\u001b[?25l\nLoading internvl3_5-1b ⠴\u001b[?25l\nLoading internvl3_5-1b ⠦\u001b[?25l\nLoading internvl3_5-1b ⠧\u001b[?25l\nLoading internvl3_5-1b ⠇\u001b[?25l\nLoading internvl3_5-1b ⠏\u001b[?25l\nLoading internvl3_5-1b ⠋\u001b[?25l\nLoading internvl3_5-1b ⠙\u001b[?25l\nLoading internvl3_5-1b ⠹\u001b[?25l\nLoading internvl3_5-1b ⠸\u001b[?25l\nLoading internvl3_5-1b ⠼\n\u001b[K\u001b[?25hError: Failed to load model. \n\n\n   (X) CAUSE  \n\nError when loading model: ValueError: Model type internvl not supported. Error: No module named 'mlx_vlm.models.internvl'\n", "results": []}, {"model_key": "qwen2-vl-2b-instruct", "display_name": "Qwen2 VL 2B Instruct", "identifier": "bench-qwen2-vl-2b-instruct", "profile_name": "default", "format": "safetensors", "params": "2B", "variant": null, "estimated_gpu_memory_gib": 1.65, "estimated_total_memory_gib": 1.65, "load_time_seconds": 3.38, "reported_memory_gib": 1.18, "average_latency_seconds": 3.862, "median_latency_seconds": 4.139, "min_latency_seconds": 2.756, "max_latency_seconds": 4.296, "completion_tokens_per_second": 10.617, "total_prompt_tokens": 640, "total_completion_tokens": 205, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 2.756, "prompt_tokens": 128, "completion_tokens": 38, "total_tokens": 166, "response_text": "A man wearing a dark hoodie and black gloves is holding a brown box. He is pointing at the door handle with his left hand. There are no other people visible in this image.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 4.139, "prompt_tokens": 128, "completion_tokens": 35, "total_tokens": 163, "response_text": "A person wearing a black jacket and hat is carrying a brown bag, possibly holding a phone. The background shows a brick house with a wooden door and a light fixture.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 4.296, "prompt_tokens": 128, "completion_tokens": 68, "total_tokens": 196, "response_text": "A man wearing a black hoodie and gray cargo pants is bending over to pick up two cardboard boxes on the porch of a house. The boxes are stacked, and there is a doormat with the word \"HOME\" written on it. The man has no visible face, and there are no other people or objects in the image.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 4.211, "prompt_tokens": 128, "completion_tokens": 55, "total_tokens": 183, "response_text": "A man wearing a white cap, yellow vest, and gray pants is holding two boxes. He stands in front of a brick house with an arched doorway and a wooden door, wearing black shoes. The scene is nighttime, and the man appears to be delivering packages.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 3.906, "prompt_tokens": 128, "completion_tokens": 9, "total_tokens": 137, "response_text": "There are no people in the image.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "smolvlm2-256m-video-instruct-mlx", "display_name": "SmolVLM2 256M Video Instruct", "identifier": "bench-smolvlm2-256m-video-instruct-mlx", "profile_name": "default", "format": "safetensors", "params": "256M", "variant": null, "estimated_gpu_memory_gib": null, "estimated_total_memory_gib": null, "load_time_seconds": null, "reported_memory_gib": null, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 0, "successful_images": 0, "failed_images": 0, "reasoning_seen": false, "benchmark_error": "Command failed (1): /Users/rex/.lmstudio/bin/lms load smolvlm2-256m-video-instruct-mlx -y --identifier bench-smolvlm2-256m-video-instruct-mlx\n\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-256m-video-instruct-mlx ⠧\n\u001b[K\u001b[?25hError: Failed to load model. \n\n\n   (X) CAUSE  \n\nError when loading model: ImportError: Package `num2words` is required to run SmolVLM processor. Install it with `pip install num2words`.\n", "results": []}, {"model_key": "qwen2.5-vl-3b-instruct", "display_name": "Qwen2.5 VL 3B Instruct", "identifier": "bench-qwen2-5-vl-3b-instruct", "profile_name": "default", "format": "safetensors", "params": "3B", "variant": null, "estimated_gpu_memory_gib": 4.03, "estimated_total_memory_gib": 4.03, "load_time_seconds": 3.68, "reported_memory_gib": 2.88, "average_latency_seconds": 3.883, "median_latency_seconds": 4.132, "min_latency_seconds": 2.805, "max_latency_seconds": 4.23, "completion_tokens_per_second": 4.532, "total_prompt_tokens": 640, "total_completion_tokens": 88, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 2.805, "prompt_tokens": 128, "completion_tokens": 27, "total_tokens": 155, "response_text": "A man wearing a black hoodie and gloves is opening the door with his right hand while holding a cardboard box in his left hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 4.23, "prompt_tokens": 128, "completion_tokens": 19, "total_tokens": 147, "response_text": "A person wearing a black jacket and cap is holding a smartphone and a brown paper bag.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 4.132, "prompt_tokens": 128, "completion_tokens": 19, "total_tokens": 147, "response_text": "A person wearing a dark hoodie and camouflage pants is placing two cardboard boxes on the porch.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 4.139, "prompt_tokens": 128, "completion_tokens": 18, "total_tokens": 146, "response_text": "A man wearing a high-visibility vest and a cap is holding an Amazon box.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 4.11, "prompt_tokens": 128, "completion_tokens": 5, "total_tokens": 133, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "bunny-llama-3-8b-v", "display_name": "Bunny Llama 3 8B V", "identifier": "bench-bunny-llama-3-8b-v", "profile_name": "default", "format": "safetensors", "params": "8B", "variant": null, "estimated_gpu_memory_gib": 6.26, "estimated_total_memory_gib": 6.26, "load_time_seconds": 18.75, "reported_memory_gib": 4.47, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 5, "successful_images": 0, "failed_images": 5, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.063, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.042, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.048, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.047, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.045, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}]}, {"model_key": "mlx-community/qwen2.5-vl-7b-instruct", "display_name": "Qwen2.5 VL 7B Instruct", "identifier": "bench-mlx-community-qwen2-5-vl-7b-instruct", "profile_name": "default", "format": "safetensors", "params": "7B", "variant": null, "estimated_gpu_memory_gib": 11.68, "estimated_total_memory_gib": 11.68, "load_time_seconds": 4.9, "reported_memory_gib": 8.34, "average_latency_seconds": 6.526, "median_latency_seconds": 6.787, "min_latency_seconds": 5.599, "max_latency_seconds": 6.961, "completion_tokens_per_second": 3.984, "total_prompt_tokens": 640, "total_completion_tokens": 130, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 5.599, "prompt_tokens": 128, "completion_tokens": 40, "total_tokens": 168, "response_text": "The person is wearing a dark hoodie, gloves, and possibly a hat or hood. They are holding a cardboard box in one hand while opening the door with the other, which is gloved.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 6.94, "prompt_tokens": 128, "completion_tokens": 31, "total_tokens": 159, "response_text": "The person is wearing a dark jacket, possibly a hood, and holding a phone in their right hand. They are also carrying a brown paper bag.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 6.787, "prompt_tokens": 128, "completion_tokens": 26, "total_tokens": 154, "response_text": "The person is wearing a dark hoodie, camouflage pants, and possibly sneakers. They are handling two cardboard boxes on the porch.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 6.961, "prompt_tokens": 128, "completion_tokens": 28, "total_tokens": 156, "response_text": "The person is wearing a yellow safety vest, dark pants, and brown shoes. They are holding an Amazon package in their right hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 6.343, "prompt_tokens": 128, "completion_tokens": 5, "total_tokens": 133, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "paligemma-3b-mix-448", "display_name": "Paligemma 3B Mix 448", "identifier": "bench-paligemma-3b-mix-448", "profile_name": "default", "format": "safetensors", "params": "3B", "variant": null, "estimated_gpu_memory_gib": 4.13, "estimated_total_memory_gib": 4.13, "load_time_seconds": 6.54, "reported_memory_gib": 2.95, "average_latency_seconds": 5.676, "median_latency_seconds": 6.744, "min_latency_seconds": 1.59, "max_latency_seconds": 6.857, "completion_tokens_per_second": 0.705, "total_prompt_tokens": 595, "total_completion_tokens": 20, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 1.59, "prompt_tokens": 119, "completion_tokens": 4, "total_tokens": 123, "response_text": "unanswerable", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 6.441, "prompt_tokens": 119, "completion_tokens": 4, "total_tokens": 123, "response_text": "unanswerable", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 6.749, "prompt_tokens": 119, "completion_tokens": 4, "total_tokens": 123, "response_text": "no person visible", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 6.857, "prompt_tokens": 119, "completion_tokens": 4, "total_tokens": 123, "response_text": "unanswerable", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 6.744, "prompt_tokens": 119, "completion_tokens": 4, "total_tokens": 123, "response_text": "no person visible", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "phi-3.5-vision-instruct", "display_name": "Phi 3.5 Vision Instruct", "identifier": "bench-phi-3-5-vision-instruct", "profile_name": "default", "format": "safetensors", "params": null, "variant": null, "estimated_gpu_memory_gib": 3.05, "estimated_total_memory_gib": 3.05, "load_time_seconds": 17.41, "reported_memory_gib": 2.18, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 5, "successful_images": 0, "failed_images": 5, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.114, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: TypeError: Model.get_input_embeddings() missing 1 required positional argument: 'inputs'\"}"}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.281, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: TypeError: Model.get_input_embeddings() missing 1 required positional argument: 'inputs'\"}"}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.281, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: TypeError: Model.get_input_embeddings() missing 1 required positional argument: 'inputs'\"}"}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.29, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: TypeError: Model.get_input_embeddings() missing 1 required positional argument: 'inputs'\"}"}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.293, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: TypeError: Model.get_input_embeddings() missing 1 required positional argument: 'inputs'\"}"}]}, {"model_key": "nanollava", "display_name": "NanoLLaVA", "identifier": "bench-nanollava", "profile_name": "default", "format": "safetensors", "params": null, "variant": null, "estimated_gpu_memory_gib": 2.75, "estimated_total_memory_gib": 2.75, "load_time_seconds": 17.71, "reported_memory_gib": 1.97, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 5, "successful_images": 0, "failed_images": 5, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.097, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.053, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.054, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.059, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.053, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Error in iterating prediction stream: IndexError: list index out of range\"}"}]}, {"model_key": "smolvlm2-500m-video-instruct-mlx", "display_name": "SmolVLM2 500M Video Instruct", "identifier": "bench-smolvlm2-500m-video-instruct-mlx", "profile_name": "default", "format": "safetensors", "params": "500M", "variant": null, "estimated_gpu_memory_gib": null, "estimated_total_memory_gib": null, "load_time_seconds": null, "reported_memory_gib": null, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 0, "successful_images": 0, "failed_images": 0, "reasoning_seen": false, "benchmark_error": "Command failed (1): /Users/rex/.lmstudio/bin/lms load smolvlm2-500m-video-instruct-mlx -y --identifier bench-smolvlm2-500m-video-instruct-mlx\n\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠦\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠧\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠇\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠏\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠋\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠙\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠹\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠸\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠼\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠴\u001b[?25l\nLoading smolvlm2-500m-video-instruct-mlx ⠦\n\u001b[K\u001b[?25hError: Failed to load model. \n\n\n   (X) CAUSE  \n\nError when loading model: ImportError: Package `num2words` is required to run SmolVLM processor. Install it with `pip install num2words`.\n", "results": []}, {"model_key": "minicpm-v-2_6", "display_name": "MiniCPM V 2 6", "identifier": "bench-minicpm-v-2-6", "profile_name": "default", "format": "gguf", "params": "7.6B", "variant": null, "estimated_gpu_memory_gib": 5.61, "estimated_total_memory_gib": 5.61, "load_time_seconds": 2.61, "reported_memory_gib": 5.33, "average_latency_seconds": 3.657, "median_latency_seconds": 3.558, "min_latency_seconds": 3.327, "max_latency_seconds": 4.019, "completion_tokens_per_second": 9.461, "total_prompt_tokens": 2890, "total_completion_tokens": 173, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 3.558, "prompt_tokens": 578, "completion_tokens": 19, "total_tokens": 597, "response_text": "A man in a green jacket and black hat holds a box while standing at a door.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 3.327, "prompt_tokens": 578, "completion_tokens": 23, "total_tokens": 601, "response_text": "A man in a black jacket and hat carrying two bags walks towards his front door while looking at his phone.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 4.019, "prompt_tokens": 578, "completion_tokens": 54, "total_tokens": 632, "response_text": "A man in a black jacket and cargo pants bends over as he stacks cardboard boxes on top of each other by the front door. The date stamp indicates this photo was taken October 26, 2023 at about 14:32.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 3.427, "prompt_tokens": 578, "completion_tokens": 26, "total_tokens": 604, "response_text": "A man in a yellow vest and black jacket holds two packages at his side as he stands on the porch of a house.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 3.955, "prompt_tokens": 578, "completion_tokens": 51, "total_tokens": 629, "response_text": "No one is in this picture. There are some boxes and a bag outside of a house on the porch. The date and time stamp at top left corner says May 15, 2024 at 3:29 pm.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "moondream-2b-2025-04-14", "display_name": "Moondream2 Text Model", "identifier": "bench-moondream-2b-2025-04-14", "profile_name": "default", "format": "gguf", "params": "2B", "variant": null, "estimated_gpu_memory_gib": 3.84, "estimated_total_memory_gib": 3.84, "load_time_seconds": 1.78, "reported_memory_gib": 3.49, "average_latency_seconds": 1.476, "median_latency_seconds": 1.47, "min_latency_seconds": 1.424, "max_latency_seconds": 1.548, "completion_tokens_per_second": 48.109, "total_prompt_tokens": 4235, "total_completion_tokens": 355, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 1.47, "prompt_tokens": 847, "completion_tokens": 66, "total_tokens": 913, "response_text": "The image shows a man standing outside of a house holding a package in his hand and opening a door to enter the home. He appears to be wearing a hoodie and gloves as he carries out this task. The scene suggests that the man might be a delivery person or a carrier, responsible for bringing packages into the residence.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 1.488, "prompt_tokens": 847, "completion_tokens": 74, "total_tokens": 921, "response_text": "The image shows a man walking into his house while holding a bag in one hand and a cell phone in the other. The scene appears to be captured at night, as evidenced by the dark surroundings and the presence of streetlights illuminating the area. The man's actions suggest that he might have just arrived home or is about to enter it after completing some errands.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 1.424, "prompt_tokens": 847, "completion_tokens": 67, "total_tokens": 914, "response_text": "The image shows a man standing in front of his door holding two cardboard boxes. He appears to be either preparing for delivery or picking up items from someone's house. The scene takes place on a porch, which has potted plants and a rug placed nearby. There is also a clock visible in the background, indicating the time.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 1.548, "prompt_tokens": 847, "completion_tokens": 77, "total_tokens": 924, "response_text": "The image shows a man standing outside of a house at night, holding a package in his hand. He appears to be delivering mail or perhaps picking up a package from the homeowner. The scene takes place on a porch, which has an arched doorway and is illuminated by a light fixture hanging above it. There are also some potted plants visible near the entrance of the house.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 1.449, "prompt_tokens": 847, "completion_tokens": 71, "total_tokens": 918, "response_text": "The image shows a front door of a house with two packages sitting on the porch. The packages are brown and appear to be cardboard boxes. There is also a potted plant placed near the packages, adding some greenery to the scene. A bench can be seen in the background, providing a place for people to sit and relax outside the home.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "microsoft/phi-4-mini-reasoning", "display_name": "Phi 4 Mini Reasoning", "identifier": "bench-microsoft-phi-4-mini-reasoning", "profile_name": "default", "format": "safetensors", "params": "3.8B", "variant": "microsoft/phi-4-mini-reasoning@4bit", "estimated_gpu_memory_gib": 2.84, "estimated_total_memory_gib": 2.84, "load_time_seconds": 3.34, "reported_memory_gib": 2.03, "average_latency_seconds": 15.606, "median_latency_seconds": 15.513, "min_latency_seconds": 15.453, "max_latency_seconds": 15.797, "completion_tokens_per_second": 85.352, "total_prompt_tokens": 620, "total_completion_tokens": 6660, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 15.453, "prompt_tokens": 124, "completion_tokens": 1332, "total_tokens": 1456, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Okay, I need to describe the visible person or people in the image based on the user's guidelines. Let me start by carefully analyzing each part of their messag", "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 15.483, "prompt_tokens": 124, "completion_tokens": 1332, "total_tokens": 1456, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Okay, I need to describe the visible person or people in the image based on the user's guidelines. Let me start by carefully analyzing each part of their messag", "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 15.513, "prompt_tokens": 124, "completion_tokens": 1332, "total_tokens": 1456, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Okay, I need to describe the visible person or people in the image based on the user's guidelines. Let me start by carefully analyzing each part of their messag", "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 15.784, "prompt_tokens": 124, "completion_tokens": 1332, "total_tokens": 1456, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Okay, I need to describe the visible person or people in the image based on the user's guidelines. Let me start by carefully analyzing each part of their messag", "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 15.797, "prompt_tokens": 124, "completion_tokens": 1332, "total_tokens": 1456, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Okay, I need to describe the visible person or people in the image based on the user's guidelines. Let me start by carefully analyzing each part of their messag", "finish_reason": "stop", "error": null}]}, {"model_key": "smolvlm-500m-instruct", "display_name": "SmolVLM 500M Instruct", "identifier": "bench-smolvlm-500m-instruct", "profile_name": "default", "format": "gguf", "params": "500M", "variant": null, "estimated_gpu_memory_gib": null, "estimated_total_memory_gib": null, "load_time_seconds": null, "reported_memory_gib": null, "average_latency_seconds": 0.211, "median_latency_seconds": 0.198, "min_latency_seconds": 0.171, "max_latency_seconds": 0.288, "completion_tokens_per_second": 78.822, "total_prompt_tokens": 920, "total_completion_tokens": 83, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.288, "prompt_tokens": 184, "completion_tokens": 25, "total_tokens": 209, "response_text": "A man wearing a hoodie and gloves is opening the door for someone. He has a box in his left hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.199, "prompt_tokens": 184, "completion_tokens": 18, "total_tokens": 202, "response_text": "A man in a black jacket and cap walks into his house carrying a brown bag.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.171, "prompt_tokens": 184, "completion_tokens": 10, "total_tokens": 194, "response_text": "A person is loading boxes into a car.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.197, "prompt_tokens": 184, "completion_tokens": 15, "total_tokens": 199, "response_text": "A man in a safety vest is holding some boxes near a door.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.198, "prompt_tokens": 184, "completion_tokens": 15, "total_tokens": 199, "response_text": "A home's front door has been cleaned and boxed for delivery.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "qwen/qwen3-vl-8b", "display_name": "Qwen3 VL 8B", "identifier": "bench-qwen-qwen3-vl-8b", "profile_name": "default", "format": "safetensors", "params": "8B", "variant": "qwen/qwen3-vl-8b@4bit", "estimated_gpu_memory_gib": 7.53, "estimated_total_memory_gib": 7.53, "load_time_seconds": 4.14, "reported_memory_gib": 5.38, "average_latency_seconds": 5.182, "median_latency_seconds": 5.534, "min_latency_seconds": 4.064, "max_latency_seconds": 5.639, "completion_tokens_per_second": 5.017, "total_prompt_tokens": 585, "total_completion_tokens": 130, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 4.064, "prompt_tokens": 117, "completion_tokens": 28, "total_tokens": 145, "response_text": "A man wearing a dark hooded jacket, a baseball cap, and gloves is holding a cardboard box and reaching for a door handle.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 5.534, "prompt_tokens": 117, "completion_tokens": 30, "total_tokens": 147, "response_text": "A person wearing a dark hooded jacket and a baseball cap is holding a smartphone in one hand and carrying a brown paper bag in the other.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 5.639, "prompt_tokens": 117, "completion_tokens": 34, "total_tokens": 151, "response_text": "A person wearing a dark hoodie, dark pants, and light-colored sneakers is bending over, placing a cardboard box on top of another box on a doormat.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 5.585, "prompt_tokens": 117, "completion_tokens": 33, "total_tokens": 150, "response_text": "A man wearing a cap, a high-visibility vest over a dark jacket, and dark pants is holding a cardboard Amazon package. He is wearing dark shoes.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 5.089, "prompt_tokens": 117, "completion_tokens": 5, "total_tokens": 122, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "allenai/olmocr-2-7b", "display_name": "Olmocr 2 7B", "identifier": "bench-allenai-olmocr-2-7b", "profile_name": "default", "format": "gguf", "params": "7B", "variant": "allenai/olmocr-2-7b@q4_k_m", "estimated_gpu_memory_gib": 5.9, "estimated_total_memory_gib": 5.9, "load_time_seconds": 2.95, "reported_memory_gib": 5.62, "average_latency_seconds": 4.508, "median_latency_seconds": 4.58, "min_latency_seconds": 4.016, "max_latency_seconds": 4.859, "completion_tokens_per_second": 4.747, "total_prompt_tokens": 6390, "total_completion_tokens": 107, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 4.58, "prompt_tokens": 1278, "completion_tokens": 18, "total_tokens": 1296, "response_text": "A man in a dark jacket and gloves is opening a door while holding a package.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 4.664, "prompt_tokens": 1278, "completion_tokens": 24, "total_tokens": 1302, "response_text": "A person wearing a dark jacket, hat, and possibly a mask is holding a phone and a brown paper bag.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 4.859, "prompt_tokens": 1278, "completion_tokens": 37, "total_tokens": 1315, "response_text": "A man is bending over, placing a cardboard box on top of another box on a porch. He is wearing a dark long-sleeve shirt, cargo pants, and sneakers.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 4.42, "prompt_tokens": 1278, "completion_tokens": 23, "total_tokens": 1301, "response_text": "A man wearing a white baseball cap, a yellow safety vest, and dark pants is holding an Amazon box.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 4.016, "prompt_tokens": 1278, "completion_tokens": 5, "total_tokens": 1283, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "mistralai/devstral-small-2-2512", "display_name": "Devstral Small 2 2512", "identifier": "bench-mistralai-devstral-small-2-2512", "profile_name": "default", "format": "safetensors", "params": "24B", "variant": "mistralai/devstral-small-2-2512@4bit", "estimated_gpu_memory_gib": 18.41, "estimated_total_memory_gib": 18.41, "load_time_seconds": 7.54, "reported_memory_gib": 13.15, "average_latency_seconds": 15.71, "median_latency_seconds": 15.601, "min_latency_seconds": 14.106, "max_latency_seconds": 17.254, "completion_tokens_per_second": 1.948, "total_prompt_tokens": 3090, "total_completion_tokens": 153, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 17.254, "prompt_tokens": 618, "completion_tokens": 46, "total_tokens": 664, "response_text": "The visible person is wearing a dark hooded jacket, black gloves, and a black cap. They are holding a small wooden box in their left hand while reaching out to touch the doorknob with their right hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 15.601, "prompt_tokens": 618, "completion_tokens": 37, "total_tokens": 655, "response_text": "The visible person is wearing a dark hooded jacket, a cap, and possibly gloves. They are holding a phone in one hand and carrying a brown paper bag in the other.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 15.58, "prompt_tokens": 618, "completion_tokens": 30, "total_tokens": 648, "response_text": "A person is visible wearing dark pants, a dark shirt, and sneakers. They are carrying two cardboard boxes stacked on top of each other.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 16.009, "prompt_tokens": 618, "completion_tokens": 35, "total_tokens": 653, "response_text": "The visible person is wearing a high-visibility vest over a dark shirt, jeans, and boots. They are holding a package in their hands and possibly wearing a cap.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 14.106, "prompt_tokens": 618, "completion_tokens": 5, "total_tokens": 623, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "mistralai/ministral-3-3b", "display_name": "Ministral 3 3B", "identifier": "bench-mistralai-ministral-3-3b", "profile_name": "default", "format": "gguf", "params": "3B", "variant": "mistralai/ministral-3-3b@q4_k_m", "estimated_gpu_memory_gib": 3.01, "estimated_total_memory_gib": 3.01, "load_time_seconds": 1.65, "reported_memory_gib": 2.78, "average_latency_seconds": 2.684, "median_latency_seconds": 2.725, "min_latency_seconds": 2.122, "max_latency_seconds": 3.227, "completion_tokens_per_second": 15.052, "total_prompt_tokens": 8280, "total_completion_tokens": 202, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 3.227, "prompt_tokens": 1656, "completion_tokens": 44, "total_tokens": 1700, "response_text": "A man in a dark gray hooded jacket and black gloves is holding a wooden box labeled \"UPS\" near his body while opening a door. He wears a black cap and appears to be wearing sneakers.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 2.596, "prompt_tokens": 1656, "completion_tokens": 43, "total_tokens": 1699, "response_text": "The individual in the image is wearing a dark hooded jacket, a black cap, and appears to be holding a smartphone while standing near an open door. They have a brown paper bag hanging from one hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 2.725, "prompt_tokens": 1656, "completion_tokens": 55, "total_tokens": 1711, "response_text": "A person in a dark long-sleeved shirt and rolled-up pants is carrying two stacked cardboard boxes while wearing sneakers. The upper body is not fully visible, but there are no hats, glasses, masks, bags, phones, or packages clearly attached to them.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 2.75, "prompt_tokens": 1656, "completion_tokens": 55, "total_tokens": 1711, "response_text": "A person in a dark jacket, light-colored reflective vest, and brown pants stands holding what appears to be a clipboard or document. They are wearing a white cap and possibly black shoes; they do not have any visible bags, masks, glasses, phones, or packages.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 2.122, "prompt_tokens": 1656, "completion_tokens": 5, "total_tokens": 1661, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "qwen/qwen3.5-9b", "display_name": "Qwen3.5 9B", "identifier": "bench-qwen-qwen3-5-9b", "profile_name": "default", "format": "gguf", "params": "9B", "variant": "qwen/qwen3.5-9b@q4_k_m", "estimated_gpu_memory_gib": 6.85, "estimated_total_memory_gib": 6.85, "load_time_seconds": 3.08, "reported_memory_gib": 6.1, "average_latency_seconds": 17.803, "median_latency_seconds": 17.455, "min_latency_seconds": 7.703, "max_latency_seconds": 25.319, "completion_tokens_per_second": 26.198, "total_prompt_tokens": 4995, "total_completion_tokens": 2332, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 25.319, "prompt_tokens": 999, "completion_tokens": 724, "total_tokens": 1723, "response_text": "A man wearing a dark baseball cap, a dark hoodie, and an olive green zip-up jacket holds a cardboard box in his left hand while reaching for a door handle with his gloved right hand.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** A man standing on a porch.\n2.  **Identify clothing:** He is wearing a dark", "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 21.096, "prompt_tokens": 999, "completion_tokens": 581, "total_tokens": 1580, "response_text": "A person wearing a dark hooded jacket and a baseball cap stands holding a smartphone and carrying a brown paper bag.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** There is one person standing on a porch.\n2.  **Analyze clothing:** They ar", "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 17.455, "prompt_tokens": 999, "completion_tokens": 443, "total_tokens": 1442, "response_text": "A person wearing a dark long-sleeved top and dark cargo pants is bending over to handle two cardboard boxes. They are wearing light-colored, dirty sneakers.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** There is one person visible, bending over.\n2.  **Describe clothing:** They", "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 17.442, "prompt_tokens": 999, "completion_tokens": 452, "total_tokens": 1451, "response_text": "A man stands on a porch wearing a baseball cap, a dark jacket, a yellow safety vest, and dark pants while holding a cardboard package.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** There is one man standing on a porch.\n2.  **Analyze clothing:** He is wear", "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 7.703, "prompt_tokens": 999, "completion_tokens": 132, "total_tokens": 1131, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the visible person(s) in the image.\n1.  **Scan the image for people:** I am looking at the porch area. There are boxes on the fl", "finish_reason": "stop", "error": null}]}, {"model_key": "nvidia/nemotron-3-nano", "display_name": "Nemotron 3 Nano", "identifier": "bench-nvidia-nemotron-3-nano", "profile_name": "default", "format": "safetensors", "params": "30B", "variant": "nvidia/nemotron-3-nano@4bit", "estimated_gpu_memory_gib": 23.2, "estimated_total_memory_gib": 23.2, "load_time_seconds": 8.26, "reported_memory_gib": 16.57, "average_latency_seconds": 2.601, "median_latency_seconds": 2.162, "min_latency_seconds": 2.139, "max_latency_seconds": 4.389, "completion_tokens_per_second": 61.121, "total_prompt_tokens": 620, "total_completion_tokens": 795, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 4.389, "prompt_tokens": 124, "completion_tokens": 159, "total_tokens": 283, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "We need to respond describing only visible person(s) in the image, but we have no image provided. The user asks to describe only the visible person or people in", "finish_reason": "length", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 2.139, "prompt_tokens": 124, "completion_tokens": 159, "total_tokens": 283, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "We need to respond describing only visible person(s) in the image, but we have no image provided. The user asks to describe only the visible person or people in", "finish_reason": "length", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 2.172, "prompt_tokens": 124, "completion_tokens": 159, "total_tokens": 283, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "We need to respond describing only visible person(s) in the image, but we have no image provided. The user asks to describe only the visible person or people in", "finish_reason": "length", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 2.145, "prompt_tokens": 124, "completion_tokens": 159, "total_tokens": 283, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "We need to respond describing only visible person(s) in the image, but we have no image provided. The user asks to describe only the visible person or people in", "finish_reason": "length", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 2.162, "prompt_tokens": 124, "completion_tokens": 159, "total_tokens": 283, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "We need to respond describing only visible person(s) in the image, but we have no image provided. The user asks to describe only the visible person or people in", "finish_reason": "length", "error": null}]}, {"model_key": "qwen/qwen2.5-vl-7b", "display_name": "Qwen2.5 VL 7B", "identifier": "bench-qwen-qwen2-5-vl-7b", "profile_name": "default", "format": "gguf", "params": "7B", "variant": "qwen/qwen2.5-vl-7b@q4_k_m", "estimated_gpu_memory_gib": 5.9, "estimated_total_memory_gib": 5.9, "load_time_seconds": 2.97, "reported_memory_gib": 5.62, "average_latency_seconds": 4.586, "median_latency_seconds": 4.647, "min_latency_seconds": 4.066, "max_latency_seconds": 4.909, "completion_tokens_per_second": 5.538, "total_prompt_tokens": 6390, "total_completion_tokens": 127, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 4.909, "prompt_tokens": 1278, "completion_tokens": 34, "total_tokens": 1312, "response_text": "A man wearing a dark hoodie and gloves holds a package in his left hand while opening a door with his right hand. He appears to be delivering mail or packages.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 4.647, "prompt_tokens": 1278, "completion_tokens": 25, "total_tokens": 1303, "response_text": "A person wearing a dark jacket and hat holds a phone in one hand while carrying a brown paper bag in the other.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 4.725, "prompt_tokens": 1278, "completion_tokens": 31, "total_tokens": 1309, "response_text": "A man wearing a dark hoodie and camouflage pants is bending over to place two cardboard boxes on a doormat. He appears to be wearing sneakers.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 4.585, "prompt_tokens": 1278, "completion_tokens": 32, "total_tokens": 1310, "response_text": "A man wearing a white cap, yellow safety vest over dark clothing, and brown shoes stands in front of a door holding a cardboard box labeled \"Amazon.\"", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 4.066, "prompt_tokens": 1278, "completion_tokens": 5, "total_tokens": 1283, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "qwen/qwen3-vl-4b", "display_name": "Qwen3 VL 4B", "identifier": "bench-qwen-qwen3-vl-4b", "profile_name": "default", "format": "safetensors", "params": "4B", "variant": "qwen/qwen3-vl-4b@4bit", "estimated_gpu_memory_gib": 4.05, "estimated_total_memory_gib": 4.05, "load_time_seconds": 4.05, "reported_memory_gib": 2.9, "average_latency_seconds": 3.617, "median_latency_seconds": 3.869, "min_latency_seconds": 2.614, "max_latency_seconds": 4.123, "completion_tokens_per_second": 8.848, "total_prompt_tokens": 585, "total_completion_tokens": 160, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 2.614, "prompt_tokens": 117, "completion_tokens": 38, "total_tokens": 155, "response_text": "A man wearing a dark hooded jacket, a cap, and gloves is holding a cardboard box in one hand and using the other to turn a door handle, likely delivering a package.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 3.869, "prompt_tokens": 117, "completion_tokens": 32, "total_tokens": 149, "response_text": "A person wearing a black hooded jacket, a black cap, and carrying a brown paper bag is standing outside, looking at a smartphone in their hand.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 3.911, "prompt_tokens": 117, "completion_tokens": 34, "total_tokens": 151, "response_text": "A man in a dark hoodie and muddy cargo pants is handling two stacked cardboard boxes, wearing worn sneakers, and appears to be placing or adjusting them on the doorstep.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 4.123, "prompt_tokens": 117, "completion_tokens": 51, "total_tokens": 168, "response_text": "A man wearing a white cap, a black jacket with a bright yellow reflective vest, and dark pants is standing on a porch, holding an Amazon package in his right hand. He is wearing dark shoes and appears to be preparing to deliver the package.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 3.567, "prompt_tokens": 117, "completion_tokens": 5, "total_tokens": 122, "response_text": "No person visible.", "reasoning_present": false, "reasoning_preview": null, "finish_reason": "stop", "error": null}]}, {"model_key": "zai-org/glm-4.7-flash", "display_name": "Glm 4.7 Flash", "identifier": "bench-zai-org-glm-4-7-flash", "profile_name": "default", "format": "safetensors", "params": "30B", "variant": "zai-org/glm-4.7-flash@6bit", "estimated_gpu_memory_gib": 31.76, "estimated_total_memory_gib": 31.76, "load_time_seconds": 9.64, "reported_memory_gib": 22.68, "average_latency_seconds": 16.424, "median_latency_seconds": 16.393, "min_latency_seconds": 16.323, "max_latency_seconds": 16.524, "completion_tokens_per_second": 48.769, "total_prompt_tokens": 555, "total_completion_tokens": 4005, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 16.393, "prompt_tokens": 111, "completion_tokens": 801, "total_tokens": 912, "response_text": "A person wearing a white t-shirt, black jacket, and dark pants is holding a smartphone and a small box while wearing round black glasses.", "reasoning_present": true, "reasoning_preview": "1.  **Analyze the Request:**\n    *   **Task:** Describe only the visible person(s) in the image.\n    *   **Constraint 1 (Length):** 1 to 2 short sentences.\n    ", "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 16.524, "prompt_tokens": 111, "completion_tokens": 801, "total_tokens": 912, "response_text": "A person wearing a white t-shirt, black jacket, and dark pants is holding a smartphone and a small box while wearing round black glasses.", "reasoning_present": true, "reasoning_preview": "1.  **Analyze the Request:**\n    *   **Task:** Describe only the visible person(s) in the image.\n    *   **Constraint 1 (Length):** 1 to 2 short sentences.\n    ", "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 16.383, "prompt_tokens": 111, "completion_tokens": 801, "total_tokens": 912, "response_text": "A person wearing a white t-shirt, black jacket, and dark pants is holding a smartphone and a small box while wearing round black glasses.", "reasoning_present": true, "reasoning_preview": "1.  **Analyze the Request:**\n    *   **Task:** Describe only the visible person(s) in the image.\n    *   **Constraint 1 (Length):** 1 to 2 short sentences.\n    ", "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 16.323, "prompt_tokens": 111, "completion_tokens": 801, "total_tokens": 912, "response_text": "A person wearing a white t-shirt, black jacket, and dark pants is holding a smartphone and a small box while wearing round black glasses.", "reasoning_present": true, "reasoning_preview": "1.  **Analyze the Request:**\n    *   **Task:** Describe only the visible person(s) in the image.\n    *   **Constraint 1 (Length):** 1 to 2 short sentences.\n    ", "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 16.499, "prompt_tokens": 111, "completion_tokens": 801, "total_tokens": 912, "response_text": "A person wearing a white t-shirt, black jacket, and dark pants is holding a smartphone and a small box while wearing round black glasses.", "reasoning_present": true, "reasoning_preview": "1.  **Analyze the Request:**\n    *   **Task:** Describe only the visible person(s) in the image.\n    *   **Constraint 1 (Length):** 1 to 2 short sentences.\n    ", "finish_reason": "stop", "error": null}]}, {"model_key": "qwen/qwen3.5-35b-a3b", "display_name": "Qwen3.5 35B A3B", "identifier": "bench-qwen-qwen3-5-35b-a3b", "profile_name": "default", "format": "gguf", "params": "35B-A3B", "variant": "qwen/qwen3.5-35b-a3b@q4_k_m", "estimated_gpu_memory_gib": 21.25, "estimated_total_memory_gib": 21.25, "load_time_seconds": 10.1, "reported_memory_gib": 20.56, "average_latency_seconds": 10.749, "median_latency_seconds": 11.289, "min_latency_seconds": 8.773, "max_latency_seconds": 12.373, "completion_tokens_per_second": 34.589, "total_prompt_tokens": 4995, "total_completion_tokens": 1859, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 10.006, "prompt_tokens": 999, "completion_tokens": 342, "total_tokens": 1341, "response_text": "A man wearing a dark green zip-up jacket over a black hoodie and a baseball cap stands at a door. He wears black gloves and holds a brown cardboard box in one hand while reaching for the handle with the other.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the subject:** There is one man visible.\n2.  **Analyze clothing and accessories:**\n    *", "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 12.373, "prompt_tokens": 999, "completion_tokens": 456, "total_tokens": 1455, "response_text": "A person wearing a dark puffy jacket with the hood pulled up over a baseball cap and dark pants is looking at a lit smartphone held in their hands. They are also carrying a brown paper bag in one hand.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the subject:** There is one person standing on a porch.\n2.  **Analyze clothing and acces", "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 11.305, "prompt_tokens": 999, "completion_tokens": 401, "total_tokens": 1400, "response_text": "A person wearing a dark long-sleeved shirt and camouflage cargo pants is bending over to handle two stacked cardboard boxes. They are wearing light-colored sneakers.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** There is one person visible, bending over.\n2.  **Analyze clothing:**\n    *", "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 11.289, "prompt_tokens": 999, "completion_tokens": 400, "total_tokens": 1399, "response_text": "A man wearing a white-fronted baseball cap and a yellow reflective safety vest over dark clothing stands facing a door. He is holding two cardboard boxes in his hands while wearing dark pants and shoes.", "reasoning_present": true, "reasoning_preview": "The user wants a description of the person in the image.\n1.  **Identify the person:** There is one man standing on a porch.\n2.  **Analyze clothing and accessori", "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 8.773, "prompt_tokens": 999, "completion_tokens": 260, "total_tokens": 1259, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "The user wants a description of people in the image.\n1.  **Scan the image for people:** I see a front porch with packages. There are houses and cars in the back", "finish_reason": "stop", "error": null}]}, {"model_key": "zai-org/glm-4.6v-flash", "display_name": "Glm 4.6v Flash", "identifier": "bench-zai-org-glm-4-6v-flash", "profile_name": "default", "format": "safetensors", "params": "9B", "variant": "zai-org/glm-4.6v-flash@4bit", "estimated_gpu_memory_gib": 9.25, "estimated_total_memory_gib": 9.25, "load_time_seconds": 6.33, "reported_memory_gib": 6.61, "average_latency_seconds": 10.888, "median_latency_seconds": 10.346, "min_latency_seconds": 8.389, "max_latency_seconds": 14.209, "completion_tokens_per_second": 13.666, "total_prompt_tokens": 575, "total_completion_tokens": 744, "images_benchmarked": 5, "successful_images": 5, "failed_images": 0, "reasoning_seen": true, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 14.209, "prompt_tokens": 115, "completion_tokens": 284, "total_tokens": 399, "response_text": "A man wears a dark hooded jacket, black cap under the hood, and gloves. He holds a cardboard box in one arm while touching the door handle with the other hand.", "reasoning_present": true, "reasoning_preview": "Got it, let's see. The user wants a description of the visible person in 1-2 sentences, mentioning clothing, hats, etc.\n\nFirst, look at the image: a man wearing", "finish_reason": "stop", "error": null}, {"image_label": "sample-02.jpg", "elapsed_seconds": 12.151, "prompt_tokens": 115, "completion_tokens": 204, "total_tokens": 319, "response_text": "A person wearing a dark hooded jacket and a dark cap holds a smartphone with a blue screen while carrying a brown paper bag.", "reasoning_present": true, "reasoning_preview": "Got it, let's see. The user wants a description of the visible person in 1-2 sentences, mentioning clothing, hats, etc.\n\nFirst, look at the image: a person in a", "finish_reason": "stop", "error": null}, {"image_label": "sample-03.jpg", "elapsed_seconds": 10.346, "prompt_tokens": 115, "completion_tokens": 123, "total_tokens": 238, "response_text": "A person wearing a dark hoodie, camouflage-patterned pants, and light-colored sneakers is bending over two cardboard boxes on a doormat.", "reasoning_present": true, "reasoning_preview": "Got it, let's see. The image shows a person bending over two boxes on a doormat. The person is wearing a dark hoodie, camouflage-patterned pants, and light-colo", "finish_reason": "stop", "error": null}, {"image_label": "sample-04.jpg", "elapsed_seconds": 9.346, "prompt_tokens": 115, "completion_tokens": 84, "total_tokens": 199, "response_text": "A person wearing a white and black cap, yellow reflective safety vest over a dark jacket, brown pants, and dark shoes is carrying two Amazon packages.", "reasoning_present": true, "reasoning_preview": "Got it, let's see. The image shows a delivery person. He is wearing a white and black cap, a yellow reflective safety vest over a dark jacket, brown pants, and ", "finish_reason": "stop", "error": null}, {"image_label": "sample-05.jpg", "elapsed_seconds": 8.389, "prompt_tokens": 115, "completion_tokens": 49, "total_tokens": 164, "response_text": "No person visible.", "reasoning_present": true, "reasoning_preview": "Got it, let's look at the image. The question is to describe only visible people. Looking at the image, there's no person visible. So we need to reply with exac", "finish_reason": "stop", "error": null}]}, {"model_key": "meta-llama-3.1-8b-instruct-hf", "display_name": "Meta Llama 3.1 8B Instruct Hf", "identifier": "bench-meta-llama-3-1-8b-instruct-hf", "profile_name": "default", "format": "gguf", "params": "8B", "variant": null, "estimated_gpu_memory_gib": 4.91, "estimated_total_memory_gib": 4.91, "load_time_seconds": 2.61, "reported_memory_gib": 4.58, "average_latency_seconds": null, "median_latency_seconds": null, "min_latency_seconds": null, "max_latency_seconds": null, "completion_tokens_per_second": null, "total_prompt_tokens": 0, "total_completion_tokens": 0, "images_benchmarked": 5, "successful_images": 0, "failed_images": 5, "reasoning_seen": false, "benchmark_error": null, "results": [{"image_label": "sample-01.jpg", "elapsed_seconds": 0.114, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Model does not support images. Please use a model that does.\"}"}, {"image_label": "sample-02.jpg", "elapsed_seconds": 0.092, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Model does not support images. Please use a model that does.\"}"}, {"image_label": "sample-03.jpg", "elapsed_seconds": 0.102, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Model does not support images. Please use a model that does.\"}"}, {"image_label": "sample-04.jpg", "elapsed_seconds": 0.106, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Model does not support images. Please use a model that does.\"}"}, {"image_label": "sample-05.jpg", "elapsed_seconds": 0.107, "prompt_tokens": null, "completion_tokens": null, "total_tokens": null, "response_text": "", "reasoning_present": false, "reasoning_preview": null, "finish_reason": null, "error": "HTTP 400 from http://127.0.0.1:1234/v1/chat/completions: {\"error\":\"Model does not support images. Please use a model that does.\"}"}]}], "excluded_models": []}</script>
   <script>
-    const rawData = document.getElementById("benchmark-data");
-    const data = JSON.parse(rawData.textContent);
-    const models = Array.isArray(data.models) ? data.models.slice() : [];
-    const summary = data.summary && typeof data.summary === "object" ? data.summary : {};
-    const requestProfiles = Array.isArray(data.request_profiles) ? data.request_profiles : [];
-    const machine = data.machine && typeof data.machine === "object" ? data.machine : {};
-    const images = normalizeImages(data.images);
-    const imageMap = new Map(images.map((image) => [image.label, image]));
-
-    /* Theme toggle */
-    (function initTheme() {
-      const saved = localStorage.getItem("bench-theme");
-      if (saved === "dark" || saved === "light") {
-        document.documentElement.setAttribute("data-theme", saved);
-      }
-      const btn = document.getElementById("theme-toggle");
-      if (btn) {
-        btn.addEventListener("click", function () {
-          const current = document.documentElement.getAttribute("data-theme");
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          let next;
-          if (current === "dark") {
-            next = "light";
-          } else if (current === "light") {
-            next = "dark";
-          } else {
-            next = prefersDark ? "light" : "dark";
-          }
-          document.documentElement.setAttribute("data-theme", next);
-          localStorage.setItem("bench-theme", next);
-        });
-      }
-    })();
-
-    function byId(id) {
-      return document.getElementById(id);
+    function toggleTheme() {
+      var html = document.documentElement;
+      var current = html.getAttribute("data-theme");
+      if (current === "dark") html.setAttribute("data-theme", "light");
+      else if (current === "light") html.removeAttribute("data-theme");
+      else html.setAttribute("data-theme", "dark");
     }
-
-    function normalizeImages(rawImages) {
-      if (!Array.isArray(rawImages)) {
-        return [];
-      }
-      return rawImages
-        .map((item) => {
-          if (typeof item === "string") {
-            return { label: item, title: item, report_path: null };
-          }
-          if (!item || typeof item !== "object" || typeof item.label !== "string") {
-            return null;
-          }
-          return {
-            label: item.label,
-            title: typeof item.title === "string" ? item.title : item.label,
-            report_path: typeof item.report_path === "string" ? item.report_path : null,
-            page_url: typeof item.page_url === "string" ? item.page_url : null,
-            source_url: typeof item.source_url === "string" ? item.source_url : null,
-            author: typeof item.author === "string" ? item.author : null,
-            license_name: typeof item.license_name === "string" ? item.license_name : null,
-            license_url: typeof item.license_url === "string" ? item.license_url : null,
-          };
-        })
-        .filter(Boolean);
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    function imageInfo(label) {
-      return imageMap.get(String(label || "")) || { label: String(label || "image"), title: String(label || "image"), report_path: null };
-    }
-
-    function imageAttribution(image) {
-      const parts = [];
-      if (image.author) {
-        parts.push("By " + image.author);
-      }
-      if (image.license_name) {
-        parts.push(image.license_name);
-      }
-      return parts.join(" · ");
-    }
-
-    function imagePreviewButton(image, className) {
-      if (!image.report_path) {
-        return '<div class="' + className + '"></div>';
-      }
-      return (
-        '<button type="button" class="' + className + '" data-image-label="' + escapeHtml(image.label) + '">' +
-        '<img src="' + escapeHtml(image.report_path) + '" alt="' + escapeHtml(image.title || image.label) + '">' +
-        "</button>"
-      );
-    }
-
-    function imageLinks(image) {
-      const links = [];
-      if (image.report_path) {
-        links.push('<a class="text-link" href="' + escapeHtml(image.report_path) + '" target="_blank" rel="noopener">Open image</a>');
-      }
-      if (image.page_url) {
-        links.push('<a class="text-link" href="' + escapeHtml(image.page_url) + '" target="_blank" rel="noopener">Source page</a>');
-      }
-      if (image.license_url && image.license_name) {
-        links.push('<a class="text-link" href="' + escapeHtml(image.license_url) + '" target="_blank" rel="noopener">' + escapeHtml(image.license_name) + "</a>");
-      }
-      return links.join(" ");
-    }
-
-    function renderImageCell(label) {
-      const image = imageInfo(label);
-      return (
-        '<div class="result-image">' +
-        imagePreviewButton(image, "result-thumb") +
-        '<div class="result-image-meta">' +
-        '<div class="result-image-title">' + escapeHtml(image.title || image.label) + '</div>' +
-        '<div class="status-note"><code>' + escapeHtml(image.label) + "</code></div>" +
-        (imageAttribution(image) ? '<div class="status-note">' + escapeHtml(imageAttribution(image)) + "</div>" : "") +
-        '<div class="result-image-links">' + imageLinks(image) + "</div>" +
-        "</div>" +
-        "</div>"
-      );
-    }
-
-    function preferredMemory(model) {
-      if (typeof model.reported_memory_gib === "number") {
-        return model.reported_memory_gib;
-      }
-      if (typeof model.estimated_total_memory_gib === "number") {
-        return model.estimated_total_memory_gib;
-      }
-      return null;
-    }
-
-    function successRatio(model) {
-      const total = typeof model.images_benchmarked === "number" ? model.images_benchmarked : 0;
-      if (!total) {
-        return 0;
-      }
-      return (typeof model.successful_images === "number" ? model.successful_images : 0) / total;
-    }
-
-    function isStable(model) {
-      return Boolean(
-        typeof model.average_latency_seconds === "number" &&
-        typeof model.images_benchmarked === "number" &&
-        typeof model.successful_images === "number" &&
-        model.images_benchmarked > 0 &&
-        model.successful_images === model.images_benchmarked
-      );
-    }
-
-    function modelStatus(model) {
-      const ratio = successRatio(model);
-      if (isStable(model)) {
-        return "stable";
-      }
-      if (ratio > 0) {
-        return "partial";
-      }
-      return "failed";
-    }
-
-    function resultLabel(model) {
-      return String(model.model_key || "unknown") + " [" + String(model.profile_name || "default") + "]";
-    }
-
-    function shortResultLabel(model) {
-      const key = String(model.model_key || "unknown");
-      return key.length > 32 ? key.slice(0, 29) + "..." : key;
-    }
-
-    function modelUrl(model) {
-      const key = String(model.model_key || "");
-      if (!key || !key.includes("/")) { return ""; }
-      return "https://lmstudio.ai/models/" + encodeURI(key);
-    }
-
-    function linkedName(model, text) {
-      const url = modelUrl(model);
-      const display = escapeHtml(text || resultLabel(model));
-      if (url) {
-        return '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener" class="model-link">' + display + "</a>";
-      }
-      return display;
-    }
-
-    function sortModels(a, b) {
-      const stableDiff = Number(isStable(b)) - Number(isStable(a));
-      if (stableDiff !== 0) {
-        return stableDiff;
-      }
-      const latencyDiff =
-        (typeof a.average_latency_seconds === "number" ? a.average_latency_seconds : Number.POSITIVE_INFINITY) -
-        (typeof b.average_latency_seconds === "number" ? b.average_latency_seconds : Number.POSITIVE_INFINITY);
-      if (latencyDiff !== 0) {
-        return latencyDiff;
-      }
-      const memoryDiff = (preferredMemory(a) ?? Number.POSITIVE_INFINITY) - (preferredMemory(b) ?? Number.POSITIVE_INFINITY);
-      if (memoryDiff !== 0) {
-        return memoryDiff;
-      }
-      return successRatio(b) - successRatio(a);
-    }
-
-    function formatFixed(value, digits) {
-      if (typeof value !== "number" || !Number.isFinite(value)) {
-        return "—";
-      }
-      return value.toFixed(digits);
-    }
-
-    function formatSuccess(model) {
-      const success = typeof model.successful_images === "number" ? model.successful_images : 0;
-      const total = typeof model.images_benchmarked === "number" ? model.images_benchmarked : 0;
-      return String(success) + "/" + String(total);
-    }
-
-    function formatDate(value) {
-      if (typeof value !== "string") {
-        return "Unknown";
-      }
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) {
-        return escapeHtml(value);
-      }
-      return date.toLocaleString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZoneName: "short",
-      });
-    }
-
-    function formatDuration(startedAt, finishedAt) {
-      const start = new Date(startedAt);
-      const finish = new Date(finishedAt);
-      if (Number.isNaN(start.getTime()) || Number.isNaN(finish.getTime())) {
-        return "Unknown";
-      }
-      let remaining = Math.max(0, Math.round((finish.getTime() - start.getTime()) / 1000));
-      const hours = Math.floor(remaining / 3600);
-      remaining -= hours * 3600;
-      const minutes = Math.floor(remaining / 60);
-      const seconds = remaining - minutes * 60;
-      const parts = [];
-      if (hours) {
-        parts.push(String(hours) + "h");
-      }
-      if (minutes || hours) {
-        parts.push(String(minutes) + "m");
-      }
-      parts.push(String(seconds) + "s");
-      return parts.join(" ");
-    }
-
-    function badge(label, status) {
-      return '<span class="badge ' + status + '">' + escapeHtml(label) + "</span>";
-    }
-
-    function renderSummaryCards(sortedModels, stableModels) {
-      const recommended = stableModels[0] || null;
-      const lightest = stableModels
-        .slice()
-        .sort((a, b) => (preferredMemory(a) ?? Number.POSITIVE_INFINITY) - (preferredMemory(b) ?? Number.POSITIVE_INFINITY))[0] || null;
-      const cards = [
-        {
-          label: "Benchmarked",
-          value: String(summary.model_count ?? sortedModels.length),
-          subtext: String(data.images?.length ?? 0) + " images across " + String(requestProfiles.length || 1) + " profile(s)",
-        },
-        {
-          label: "Stable",
-          value: String(summary.stable_model_count ?? stableModels.length),
-          subtext: stableModels.length ? "Fully completed image set" : "No stable completions",
-        },
-        {
-          label: "Fastest Stable",
-          value: recommended ? formatFixed(recommended.average_latency_seconds, 3) + "s" : "—",
-          subtext: recommended ? resultLabel(recommended) : "No stable result",
-        },
-        {
-          label: "Lightest Stable",
-          value: lightest && preferredMemory(lightest) !== null ? formatFixed(preferredMemory(lightest), 2) + " GiB" : "—",
-          subtext: lightest ? resultLabel(lightest) : "No stable result",
-        },
-      ];
-      byId("summary-grid").innerHTML = cards
-        .map(
-          (card) =>
-            '<div class="summary-card">' +
-            '<div class="summary-label">' + escapeHtml(card.label) + "</div>" +
-            '<div class="summary-value">' + escapeHtml(card.value) + "</div>" +
-            '<div class="summary-subtext">' + escapeHtml(card.subtext) + "</div>" +
-            "</div>"
-        )
-        .join("");
-    }
-
-    function renderMeta() {
-      const meta = [
-        "Started " + formatDate(data.started_at),
-        "Finished " + formatDate(data.finished_at),
-        "Duration " + formatDuration(data.started_at, data.finished_at),
-        String(machine.model_name || "Unknown machine"),
-        String(machine.chip || "Unknown chip"),
-        machine.total_memory_gb ? String(machine.total_memory_gb) + " GB RAM" : "Memory unknown",
-      ];
-      byId("hero-meta").innerHTML = meta
-        .map((item) => '<span class="meta-pill">' + escapeHtml(item) + "</span>")
-        .join("");
-    }
-
-    function renderPrompt() {
-      byId("prompt-box").textContent = typeof data.prompt === "string" ? data.prompt : "";
-      byId("profiles").innerHTML = requestProfiles
-        .map((profile) => {
-          const extra = profile.extra_body && typeof profile.extra_body === "object" ? Object.keys(profile.extra_body) : [];
-          return (
-            '<div class="profile-chip">' +
-            "<strong>" + escapeHtml(profile.name || "default") + "</strong>" +
-            '<div class="status-note">temperature ' + escapeHtml(String(profile.temperature ?? "0.0")) +
-            " · max_tokens " + escapeHtml(String(profile.max_tokens ?? "—")) + "</div>" +
-            '<div class="status-note">' +
-            (extra.length ? escapeHtml("extra fields: " + extra.join(", ")) : "default request body") +
-            "</div>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
-
-    function renderSampleGallery() {
-      byId("sample-gallery").innerHTML = images
-        .map((image) => {
-          return (
-            '<article class="sample-card">' +
-            imagePreviewButton(image, "sample-thumb") +
-            '<div class="sample-title">' + escapeHtml(image.title || image.label) + "</div>" +
-            '<div class="sample-meta"><code>' + escapeHtml(image.label) + "</code></div>" +
-            (imageAttribution(image) ? '<div class="sample-meta">' + escapeHtml(imageAttribution(image)) + "</div>" : "") +
-            "</article>"
-          );
-        })
-        .join("");
-    }
-
-    function initImageModal() {
-      var modal = byId("image-modal");
-      var modalImg = byId("image-modal-img");
-      var modalTitle = byId("image-modal-title");
-      var modalCaption = byId("image-modal-caption");
-      if (!modal || !modalImg || !modalTitle || !modalCaption) {
-        return;
-      }
-
-      document.addEventListener("click", function (event) {
-        var target = event.target;
-        if (!(target instanceof Element)) {
-          return;
-        }
-        var button = target.closest("[data-image-label]");
-        if (!button) {
-          return;
-        }
-        var image = imageInfo(button.getAttribute("data-image-label"));
-        if (!image.report_path) {
-          return;
-        }
-        modalTitle.textContent = image.title || image.label;
-        modalImg.src = image.report_path;
-        modalImg.alt = image.title || image.label;
-        modalCaption.innerHTML =
-          '<div><code>' + escapeHtml(image.label) + "</code></div>" +
-          (imageAttribution(image) ? '<div>' + escapeHtml(imageAttribution(image)) + "</div>" : "") +
-          (image.page_url ? '<div><a class="text-link" href="' + escapeHtml(image.page_url) + '" target="_blank" rel="noopener">Original source page</a></div>' : "");
-        modal.showModal();
-      });
-
-      byId("image-modal-close").addEventListener("click", function () {
-        modal.close();
-      });
-      modal.addEventListener("click", function (event) {
-        var rect = modal.getBoundingClientRect();
-        var inBounds =
-          rect.top <= event.clientY &&
-          event.clientY <= rect.top + rect.height &&
-          rect.left <= event.clientX &&
-          event.clientX <= rect.left + rect.width;
-        if (!inBounds) {
-          modal.close();
-        }
-      });
-    }
-
-    function renderLeaderboard(sortedModels, stableModels) {
-      const rows = stableModels.slice(0, 5);
-      if (!rows.length) {
-        byId("leaderboard").innerHTML = '<div class="empty-state">No stable results completed the entire image set.</div>';
-        return;
-      }
-      byId("leaderboard").innerHTML = rows
-        .map((model, index) => {
-          const memory = preferredMemory(model);
-          return (
-            '<div class="leader-row">' +
-            '<div class="rank">#' + String(index + 1) + "</div>" +
-            '<div>' +
-            '<div class="leader-name">' + linkedName(model) + "</div>" +
-            '<div class="leader-meta">' +
-            escapeHtml(String(model.format || "unknown")) +
-            " · " +
-            escapeHtml(memory !== null ? formatFixed(memory, 2) + " GiB" : "RAM unknown") +
-            " · " +
-            escapeHtml(formatFixed(model.completion_tokens_per_second, 3) + " tok/s") +
-            "</div>" +
-            "</div>" +
-            '<div class="leader-score"><strong>' + escapeHtml(formatFixed(model.average_latency_seconds, 3)) + 's</strong><span class="status-note">' +
-            escapeHtml(formatSuccess(model)) + " success</span></div>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
-
-    function renderScatter(sortedModels) {
-      const plottable = sortedModels.filter((model) => preferredMemory(model) !== null && typeof model.average_latency_seconds === "number");
-      if (!plottable.length) {
-        byId("scatter-chart").innerHTML = '<div class="empty-state">No results had both latency and memory data.</div>';
-        return;
-      }
-
-      const width = 760;
-      const height = 440;
-      const margin = { top: 28, right: 28, bottom: 52, left: 64 };
-      const plotWidth = width - margin.left - margin.right;
-      const plotHeight = height - margin.top - margin.bottom;
-      const memoryValues = plottable.map((model) => preferredMemory(model));
-      const latencyValues = plottable.map((model) => model.average_latency_seconds);
-      const memoryRange = Math.max(...memoryValues) - Math.min(...memoryValues);
-      const latencyRange = Math.max(...latencyValues) - Math.min(...latencyValues);
-      const memoryPad = memoryRange * 0.08 || 0.5;
-      const latencyPad = latencyRange * 0.08 || 0.5;
-      const minMemory = Math.min(...memoryValues) - memoryPad;
-      const maxMemory = Math.max(...memoryValues) + memoryPad;
-      const minLatency = Math.min(...latencyValues) - latencyPad;
-      const maxLatency = Math.max(...latencyValues) + latencyPad;
-
-      function scale(value, min, max, size) {
-        if (max === min) { return size / 2; }
-        return ((value - min) / (max - min)) * size;
-      }
-      function xFor(model) {
-        return margin.left + scale(preferredMemory(model), minMemory, maxMemory, plotWidth);
-      }
-      function yFor(model) {
-        return margin.top + plotHeight - scale(model.average_latency_seconds, minLatency, maxLatency, plotHeight);
-      }
-      function radiusFor(model) {
-        var throughput = typeof model.completion_tokens_per_second === "number" ? model.completion_tokens_per_second : 0;
-        return Math.max(10, Math.min(22, 10 + throughput / 4));
-      }
-      function colorFor(model) {
-        var status = modelStatus(model);
-        var style = getComputedStyle(document.documentElement);
-        if (status === "stable") { return style.getPropertyValue("--teal").trim() || "#236d6a"; }
-        if (status === "partial") { return style.getPropertyValue("--gold").trim() || "#a0771b"; }
-        return style.getPropertyValue("--danger").trim() || "#a63d40";
-      }
-
-      var xTicks = 5;
-      var yTicks = 5;
-      var grid = [];
-      for (var i = 0; i <= xTicks; i++) {
-        var gx = margin.left + (plotWidth / xTicks) * i;
-        var xVal = minMemory + ((maxMemory - minMemory) / xTicks) * i;
-        grid.push('<line x1="' + gx + '" y1="' + margin.top + '" x2="' + gx + '" y2="' + (margin.top + plotHeight) + '" stroke="var(--chart-grid)" stroke-dasharray="4 6" />');
-        grid.push('<text x="' + gx + '" y="' + (height - 16) + '" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="IBM Plex Mono">' + escapeHtml(xVal.toFixed(1)) + "</text>");
-      }
-      for (var j = 0; j <= yTicks; j++) {
-        var gy = margin.top + plotHeight - (plotHeight / yTicks) * j;
-        var yVal = minLatency + ((maxLatency - minLatency) / yTicks) * j;
-        grid.push('<line x1="' + margin.left + '" y1="' + gy + '" x2="' + (margin.left + plotWidth) + '" y2="' + gy + '" stroke="var(--chart-grid)" stroke-dasharray="4 6" />');
-        grid.push('<text x="' + (margin.left - 10) + '" y="' + (gy + 4) + '" text-anchor="end" fill="var(--muted)" font-size="11" font-family="IBM Plex Mono">' + escapeHtml(yVal.toFixed(1)) + "</text>");
-      }
-
-      /* Draw numbered dots instead of inline labels to avoid overlap */
-      var dots = plottable.map(function (model, idx) {
-        var x = xFor(model);
-        var y = yFor(model);
-        var r = radiusFor(model);
-        var color = colorFor(model);
-        var mem = preferredMemory(model);
-        var lat = model.average_latency_seconds;
-        var num = String(idx + 1);
-        return '<g>' +
-          '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + color + '" fill-opacity="0.78" stroke="var(--dot-stroke)" stroke-width="1.5" />' +
-          '<text x="' + x + '" y="' + (y + 4.5) + '" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="IBM Plex Mono" pointer-events="none">' + num + '</text>' +
-          '<title>' + escapeHtml(resultLabel(model) + " | " + formatFixed(mem, 2) + " GiB | " + formatFixed(lat, 3) + "s") + '</title>' +
-          '</g>';
-      }).join("");
-
-      var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Latency versus memory scatter chart">' +
-        '<rect x="0" y="0" width="' + width + '" height="' + height + '" rx="22" fill="var(--chart-rect)" />' +
-        grid.join("") +
-        '<line x1="' + margin.left + '" y1="' + (margin.top + plotHeight) + '" x2="' + (margin.left + plotWidth) + '" y2="' + (margin.top + plotHeight) + '" stroke="var(--chart-axis)" stroke-width="1.3" />' +
-        '<line x1="' + margin.left + '" y1="' + margin.top + '" x2="' + margin.left + '" y2="' + (margin.top + plotHeight) + '" stroke="var(--chart-axis)" stroke-width="1.3" />' +
-        '<text x="' + (margin.left + plotWidth / 2) + '" y="' + (height - 4) + '" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono">Memory footprint (GiB)</text>' +
-        '<text x="16" y="' + (margin.top + plotHeight / 2) + '" transform="rotate(-90 16 ' + (margin.top + plotHeight / 2) + ')" text-anchor="middle" fill="var(--muted)" font-size="12" font-family="IBM Plex Mono">Avg latency (s) — lower is better</text>' +
-        dots +
-        '</svg>';
-
-      /* Build legend that maps numbers to model names */
-      var legendHtml = '<div class="scatter-legend">' + plottable.map(function (model, idx) {
-        var color = colorFor(model);
-        var mem = preferredMemory(model);
-        var lat = model.average_latency_seconds;
-        var tps = model.completion_tokens_per_second;
-        return '<div class="scatter-legend-item">' +
-          '<span class="scatter-num" style="background:' + color + '">' + String(idx + 1) + '</span>' +
-          '<span>' + linkedName(model) +
-          ' <span class="status-note">' + escapeHtml(formatFixed(mem, 1) + " GiB · " + formatFixed(lat, 2) + "s · " + formatFixed(tps, 1) + " tok/s") + '</span></span>' +
-          '</div>';
-      }).join("") + '</div>';
-
-      byId("scatter-chart").innerHTML = svg + legendHtml;
-    }
-
-    function renderMetricBars(options) {
-      var items = Array.isArray(options.items) ? options.items : [];
-      if (!items.length) {
-        byId(options.targetId).innerHTML = '<div class="empty-state">No chart data available.</div>';
-        return;
-      }
-      var maxValue = Math.max.apply(null, items.map(function (item) { return options.valueFor(item) || 0; }));
-      byId(options.targetId).innerHTML =
-        '<div class="chart-bars">' +
-        items.map(function (item) {
-          var value = options.valueFor(item) || 0;
-          var width = maxValue === 0 ? 0 : (value / maxValue) * 100;
-          var color = isStable(item) ? "var(--teal)" : successRatio(item) > 0 ? "var(--gold)" : "var(--danger)";
-          return (
-            '<div class="metric-row">' +
-            '<div class="metric-label">' + linkedName(item, shortResultLabel(item)) + "</div>" +
-            '<div class="track"><div class="track-fill" style="width:' + String(Math.max(0, Math.min(100, width))) + '%; background:' + color + ';"></div></div>' +
-            '<div class="metric-value">' + escapeHtml(options.valueLabel(item)) + "</div>" +
-            "</div>"
-          );
-        }).join("") +
-        "</div>";
-    }
-
-    function renderLatencyChart(stableModels) {
-      if (!stableModels.length) {
-        byId("latency-chart").innerHTML = '<div class="empty-state">No fully successful runs to rank.</div>';
-        return;
-      }
-      renderMetricBars({
-        targetId: "latency-chart",
-        items: stableModels.slice(0, 8),
-        valueFor: function (model) { return model.average_latency_seconds; },
-        valueLabel: function (model) { return formatFixed(model.average_latency_seconds, 3) + "s"; },
-      });
-    }
-
-    function renderReliability(sortedModels) {
-      byId("reliability-chart").innerHTML = sortedModels
-        .map((model) => {
-          const ratio = successRatio(model);
-          const status = modelStatus(model);
-          const reasoning = model.reasoning_seen ? "reasoning seen" : "no reasoning";
-          return (
-            '<div class="reliability-row">' +
-            '<div><div class="leader-name">' + escapeHtml(shortResultLabel(model)) + "</div>" +
-            '<div class="status-note">' + escapeHtml(reasoning) + "</div></div>" +
-            '<div class="track"><div class="track-fill ' + status + '" style="width:' + String(Math.max(0, Math.min(100, ratio * 100))) + '%"></div></div>' +
-            '<div>' + badge(formatSuccess(model), status) + "</div>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
-
-    function renderMemoryChart(sortedModels) {
-      var plottable = sortedModels.filter(function (model) { return preferredMemory(model) !== null; });
-      if (!plottable.length) {
-        byId("memory-chart").innerHTML = '<div class="empty-state">No memory data available.</div>';
-        return;
-      }
-      plottable = plottable.slice().sort(function (a, b) { return (preferredMemory(a) || 0) - (preferredMemory(b) || 0); });
-      renderMetricBars({
-        targetId: "memory-chart",
-        items: plottable.slice(0, 10),
-        valueFor: function (model) { return preferredMemory(model); },
-        valueLabel: function (model) { return formatFixed(preferredMemory(model), 2) + " GiB"; },
-      });
-    }
-
-    function renderThroughputChart(sortedModels) {
-      var plottable = sortedModels.filter(function (model) { return typeof model.completion_tokens_per_second === "number" && model.completion_tokens_per_second > 0; });
-      if (!plottable.length) {
-        byId("throughput-chart").innerHTML = '<div class="empty-state">No throughput data available.</div>';
-        return;
-      }
-      plottable.sort(function (a, b) { return (b.completion_tokens_per_second || 0) - (a.completion_tokens_per_second || 0); });
-      renderMetricBars({
-        targetId: "throughput-chart",
-        items: plottable.slice(0, 10),
-        valueFor: function (model) { return model.completion_tokens_per_second; },
-        valueLabel: function (model) { return formatFixed(model.completion_tokens_per_second, 1) + " tok/s"; },
-      });
-    }
-
-    function renderEfficiencyChart(sortedModels) {
-      var plottable = sortedModels.filter(function (model) {
-        return typeof model.completion_tokens_per_second === "number" && model.completion_tokens_per_second > 0 && preferredMemory(model) !== null && preferredMemory(model) > 0;
-      });
-      if (!plottable.length) {
-        byId("efficiency-chart").innerHTML = '<div class="empty-state">No efficiency data available.</div>';
-        return;
-      }
-      function efficiency(model) {
-        return model.completion_tokens_per_second / preferredMemory(model);
-      }
-      plottable.sort(function (a, b) { return efficiency(b) - efficiency(a); });
-      renderMetricBars({
-        targetId: "efficiency-chart",
-        items: plottable.slice(0, 10),
-        valueFor: efficiency,
-        valueLabel: function (model) { return formatFixed(efficiency(model), 2) + " tok/s/GiB"; },
-      });
-    }
-
-    function renderLoadTimeChart(sortedModels) {
-      var plottable = sortedModels.filter(function (model) {
-        return typeof model.load_time_seconds === "number" && model.load_time_seconds > 0;
-      });
-      if (!plottable.length) {
-        byId("load-time-chart").innerHTML = '<div class="empty-state">No load time data available.</div>';
-        return;
-      }
-      plottable.sort(function (a, b) { return (a.load_time_seconds || 0) - (b.load_time_seconds || 0); });
-      renderMetricBars({
-        targetId: "load-time-chart",
-        items: plottable.slice(0, 10),
-        valueFor: function (model) { return model.load_time_seconds; },
-        valueLabel: function (model) { return formatFixed(model.load_time_seconds, 2) + "s"; },
-      });
-    }
-
-    function renderLatencySpread(stableModels) {
-      if (!stableModels.length) {
-        byId("latency-spread-chart").innerHTML = '<div class="empty-state">No stable models to show spread for.</div>';
-        return;
-      }
-      var spreads = stableModels.map(function (model) {
-        var results = Array.isArray(model.results) ? model.results : [];
-        var times = results.map(function (r) { return r.elapsed_seconds; }).filter(function (t) { return typeof t === "number"; }).sort(function (a, b) { return a - b; });
-        if (!times.length) return null;
-        var min = times[0];
-        var max = times[times.length - 1];
-        var mid = times.length % 2 === 0 ? (times[times.length / 2 - 1] + times[times.length / 2]) / 2 : times[Math.floor(times.length / 2)];
-        return { model: model, min: min, median: mid, max: max };
-      }).filter(Boolean);
-      if (!spreads.length) {
-        byId("latency-spread-chart").innerHTML = '<div class="empty-state">No per-image timing data available.</div>';
-        return;
-      }
-      var globalMax = Math.max.apply(null, spreads.map(function (s) { return s.max; }));
-      var barHtml = spreads.map(function (s) {
-        var leftPct = (s.min / globalMax) * 100;
-        var widthPct = ((s.max - s.min) / globalMax) * 100;
-        var medPct = (s.median / globalMax) * 100;
-        return (
-          '<div class="metric-row">' +
-          '<div class="metric-label">' + linkedName(s.model, shortResultLabel(s.model)) + '</div>' +
-          '<div class="track" style="position:relative">' +
-          '<div style="position:absolute;left:' + leftPct + '%;width:' + Math.max(widthPct, 0.5) + '%;height:100%;background:var(--teal);opacity:0.35;border-radius:4px"></div>' +
-          '<div style="position:absolute;left:' + medPct + '%;width:2px;height:100%;background:var(--teal)"></div>' +
-          '</div>' +
-          '<div class="metric-value" style="min-width:10em;font-size:0.82rem">' + escapeHtml(formatFixed(s.min, 2) + ' / ' + formatFixed(s.median, 2) + ' / ' + formatFixed(s.max, 2) + 's') + '</div>' +
-          '</div>'
-        );
-      }).join('');
-      byId("latency-spread-chart").innerHTML = '<div class="chart-bars">' + barHtml + '</div>';
-    }
-
-    function renderLatencyHeatmap(sortedModels) {
-      var modelsWithResults = sortedModels.filter(function (m) { return Array.isArray(m.results) && m.results.length > 0; });
-      if (!modelsWithResults.length || !images.length) {
-        byId("latency-heatmap").innerHTML = '<div class="empty-state">No per-image data for heatmap.</div>';
-        return;
-      }
-      var imageLabels = images.map(function (img) { return img.label; });
-      var allTimes = [];
-      modelsWithResults.forEach(function (m) {
-        m.results.forEach(function (r) {
-          if (typeof r.elapsed_seconds === "number") allTimes.push(r.elapsed_seconds);
-        });
-      });
-      if (!allTimes.length) {
-        byId("latency-heatmap").innerHTML = '<div class="empty-state">No timing data for heatmap.</div>';
-        return;
-      }
-      var minTime = Math.min.apply(null, allTimes);
-      var maxTime = Math.max.apply(null, allTimes);
-      var range = maxTime - minTime || 1;
-
-      function cellColor(t) {
-        if (typeof t !== "number") return "var(--chart-rect)";
-        var ratio = (t - minTime) / range;
-        var r = Math.round(35 + ratio * 130);
-        var g = Math.round(109 - ratio * 60);
-        var b = Math.round(106 - ratio * 40);
-        return "rgb(" + r + "," + g + "," + b + ")";
-      }
-
-      var headerCells = '<th style="position:sticky;left:0;z-index:2;background:var(--surface)">Model</th>' +
-        imageLabels.map(function (label) {
-          var img = imageInfo(label);
-          var short = (img.title || label).length > 12 ? (img.title || label).slice(0, 10) + ".." : (img.title || label);
-          return '<th style="writing-mode:vertical-lr;font-size:0.72rem;padding:4px 2px">' + escapeHtml(short) + '</th>';
-        }).join('');
-
-      var bodyRows = modelsWithResults.map(function (model) {
-        var resultMap = {};
-        (model.results || []).forEach(function (r) { resultMap[r.image_label] = r; });
-        var cells = imageLabels.map(function (label) {
-          var r = resultMap[label];
-          var t = r ? r.elapsed_seconds : null;
-          var bg = cellColor(t);
-          var text = typeof t === "number" ? formatFixed(t, 2) : "—";
-          return '<td style="background:' + bg + ';color:#fff;text-align:center;font-size:0.78rem;padding:3px 6px;font-family:IBM Plex Mono,monospace" title="' + escapeHtml(shortResultLabel(model) + ' × ' + label + ': ' + text + 's') + '">' + escapeHtml(text) + '</td>';
-        }).join('');
-        return '<tr><td style="position:sticky;left:0;z-index:1;background:var(--surface);white-space:nowrap;font-size:0.82rem;padding:4px 8px">' + escapeHtml(shortResultLabel(model)) + '</td>' + cells + '</tr>';
-      }).join('');
-
-      var legendHtml = '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:0.78rem;color:var(--muted)">' +
-        '<span>' + formatFixed(minTime, 1) + 's</span>' +
-        '<div style="flex:1;max-width:200px;height:10px;border-radius:4px;background:linear-gradient(to right,rgb(35,109,106),rgb(165,49,66))"></div>' +
-        '<span>' + formatFixed(maxTime, 1) + 's</span>' +
-        '</div>';
-
-      byId("latency-heatmap").innerHTML =
-        '<table style="border-collapse:collapse;width:100%"><thead><tr>' + headerCells + '</tr></thead><tbody>' + bodyRows + '</tbody></table>' + legendHtml;
-    }
-
-    function renderFormatComparison(sortedModels) {
-      var stableByFormat = {};
-      sortedModels.forEach(function (m) {
-        if (typeof m.average_latency_seconds !== "number") return;
-        var fmt = (m.format || "unknown").toLowerCase();
-        if (!stableByFormat[fmt]) stableByFormat[fmt] = [];
-        stableByFormat[fmt].push(m);
-      });
-      var formats = Object.keys(stableByFormat).sort();
-      if (formats.length < 1) {
-        byId("format-comparison-chart").innerHTML = '<div class="empty-state">Not enough format data.</div>';
-        return;
-      }
-      var rows = formats.map(function (fmt) {
-        var ms = stableByFormat[fmt];
-        var avgLat = ms.reduce(function (s, m) { return s + m.average_latency_seconds; }, 0) / ms.length;
-        var avgTok = ms.reduce(function (s, m) { return s + (m.completion_tokens_per_second || 0); }, 0) / ms.length;
-        var avgMem = ms.filter(function (m) { return preferredMemory(m) !== null; });
-        var memVal = avgMem.length > 0 ? avgMem.reduce(function (s, m) { return s + preferredMemory(m); }, 0) / avgMem.length : null;
-        return { format: fmt, count: ms.length, avgLat: avgLat, avgTok: avgTok, avgMem: memVal };
-      });
-      var maxLat = Math.max.apply(null, rows.map(function (r) { return r.avgLat; }));
-      var maxTok = Math.max.apply(null, rows.map(function (r) { return r.avgTok; }));
-      var colors = { gguf: "#5b8def", safetensors: "#e5704b", mlx: "#50c878" };
-      var html = rows.map(function (r) {
-        var barColor = colors[r.format] || "#888";
-        var latPct = maxLat > 0 ? (r.avgLat / maxLat * 100) : 0;
-        var tokPct = maxTok > 0 ? (r.avgTok / maxTok * 100) : 0;
-        return '<div style="margin-bottom:16px">' +
-          '<div style="font-weight:600;font-size:0.9rem;margin-bottom:4px">' + escapeHtml(r.format.toUpperCase()) +
-          ' <span class="status-note">(' + r.count + ' model' + (r.count !== 1 ? 's' : '') + ')</span></div>' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
-          '<span style="width:70px;font-size:0.78rem;color:var(--muted)">Latency</span>' +
-          '<div style="flex:1;height:18px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
-          '<div style="width:' + latPct + '%;height:100%;background:' + barColor + ';border-radius:4px;transition:width .3s"></div></div>' +
-          '<span class="mono" style="font-size:0.82rem;min-width:55px;text-align:right">' + formatFixed(r.avgLat, 2) + 's</span></div>' +
-          '<div style="display:flex;align-items:center;gap:8px">' +
-          '<span style="width:70px;font-size:0.78rem;color:var(--muted)">Tok/s</span>' +
-          '<div style="flex:1;height:18px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
-          '<div style="width:' + tokPct + '%;height:100%;background:' + barColor + ';opacity:0.7;border-radius:4px;transition:width .3s"></div></div>' +
-          '<span class="mono" style="font-size:0.82rem;min-width:55px;text-align:right">' + formatFixed(r.avgTok, 1) + '</span></div>' +
-          (r.avgMem !== null ? '<div style="font-size:0.78rem;color:var(--muted);margin-top:2px;margin-left:78px">Avg RAM: ' + formatFixed(r.avgMem, 2) + ' GiB</div>' : '') +
-          '</div>';
-      }).join('');
-      byId("format-comparison-chart").innerHTML = html;
-    }
-
-    function renderSpeedTierChart(sortedModels) {
-      var tiers = [
-        { label: "Real-time (< 2s)", max: 2, color: "#50c878", models: [] },
-        { label: "Interactive (2–5s)", max: 5, color: "#f0ad4e", models: [] },
-        { label: "Batch (5s+)", max: Infinity, color: "#d9534f", models: [] }
-      ];
-      sortedModels.forEach(function (m) {
-        if (typeof m.average_latency_seconds !== "number") return;
-        for (var i = 0; i < tiers.length; i++) {
-          if (m.average_latency_seconds < tiers[i].max) {
-            tiers[i].models.push(m);
-            break;
-          }
-        }
-      });
-      var maxLat = Math.max.apply(null, sortedModels.filter(function (m) { return typeof m.average_latency_seconds === "number"; }).map(function (m) { return m.average_latency_seconds; }).concat([1]));
-      var html = tiers.map(function (tier) {
-        if (!tier.models.length) {
-          return '<div style="margin-bottom:16px;opacity:0.5">' +
-            '<div style="font-weight:600;font-size:0.9rem;margin-bottom:4px;color:' + tier.color + '">' + escapeHtml(tier.label) + '</div>' +
-            '<div style="font-size:0.82rem;color:var(--muted);font-style:italic">No models in this tier</div></div>';
-        }
-        var modelBars = tier.models.sort(function (a, b) { return a.average_latency_seconds - b.average_latency_seconds; }).map(function (m) {
-          var pct = Math.max(3, m.average_latency_seconds / maxLat * 100);
-          var tokInfo = m.completion_tokens_per_second ? " · " + formatFixed(m.completion_tokens_per_second, 1) + " tok/s" : "";
-          return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">' +
-            '<span style="min-width:180px;font-size:0.82rem;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(shortResultLabel(m)) + '">' + escapeHtml(shortResultLabel(m)) + '</span>' +
-            '<div style="flex:1;height:20px;background:var(--chart-grid);border-radius:4px;overflow:hidden">' +
-            '<div style="width:' + pct + '%;height:100%;background:' + tier.color + ';border-radius:4px;transition:width .3s"></div></div>' +
-            '<span class="mono" style="font-size:0.82rem;min-width:100px;text-align:right">' + formatFixed(m.average_latency_seconds, 3) + 's' + escapeHtml(tokInfo) + '</span></div>';
-        }).join('');
-        return '<div style="margin-bottom:20px">' +
-          '<div style="font-weight:600;font-size:0.9rem;margin-bottom:8px;color:' + tier.color + '">' + escapeHtml(tier.label) +
-          ' <span class="status-note">(' + tier.models.length + ')</span></div>' + modelBars + '</div>';
-      }).join('');
-      byId("speed-tier-chart").innerHTML = html;
-    }
-
-    function renderResponseComparison(sortedModels) {
-      var modelsWithResults = sortedModels.filter(function (m) { return Array.isArray(m.results) && m.results.length > 0; });
-      if (!modelsWithResults.length || !images.length) {
-        byId("response-comparison").innerHTML = '<div class="empty-state">No response data to compare.</div>';
-        return;
-      }
-      var imageLabels = images.map(function (img) { return img.label; });
-      var html = imageLabels.map(function (label) {
-        var img = imageInfo(label);
-        var responses = modelsWithResults.map(function (model) {
-          var result = (model.results || []).find(function (r) { return r.image_label === label; });
-          var text = result ? (result.error ? "ERROR: " + result.error : (result.response_text || "—")) : "—";
-          var time = result && typeof result.elapsed_seconds === "number" ? formatFixed(result.elapsed_seconds, 2) + "s" : "—";
-          return (
-            '<div style="border:1px solid var(--chart-grid);border-radius:8px;padding:12px;flex:1;min-width:250px">' +
-            '<div style="font-weight:600;margin-bottom:4px">' + escapeHtml(shortResultLabel(model)) + ' <span class="status-note">' + escapeHtml(time) + '</span></div>' +
-            '<div style="font-size:0.85rem;white-space:pre-wrap;max-height:200px;overflow-y:auto">' + escapeHtml(text) + '</div>' +
-            '</div>'
-          );
-        }).join('');
-        return (
-          '<details>' +
-          '<summary>' +
-          '<div class="details-title">' +
-          '<strong>' + escapeHtml(img.title || label) + '</strong>' +
-          '<span class="status-note">' + escapeHtml(label) + '</span>' +
-          '</div>' +
-          '</summary>' +
-          '<div class="details-body" style="display:flex;flex-wrap:wrap;gap:12px">' + responses + '</div>' +
-          '</details>'
-        );
-      }).join('');
-      byId("response-comparison").innerHTML = html;
-    }
-
-    function renderSummaryTable(sortedModels) {
-      byId("summary-table").innerHTML = sortedModels
-        .map((model) => {
-          const status = modelStatus(model);
-          return (
-            "<tr>" +
-            "<td><strong>" + linkedName(model) + "</strong></td>" +
-            "<td>" + escapeHtml(String(model.format || "unknown")) + "</td>" +
-            '<td class="num mono">' + escapeHtml(preferredMemory(model) !== null ? formatFixed(preferredMemory(model), 3) : "—") + "</td>" +
-            '<td class="num mono">' + escapeHtml(formatFixed(model.average_latency_seconds, 3)) + "</td>" +
-            '<td class="num mono">' + escapeHtml(formatFixed(model.median_latency_seconds, 3)) + "</td>" +
-            '<td class="num mono">' + escapeHtml(formatFixed(model.completion_tokens_per_second, 3)) + "</td>" +
-            "<td>" + badge(formatSuccess(model), status) + "</td>" +
-            "<td>" + badge(model.reasoning_seen ? "yes" : "no", model.reasoning_seen ? "partial" : "stable") + "</td>" +
-            "</tr>"
-          );
-        })
-        .join("");
-    }
-
-    function fact(label, value) {
-      return '<div class="fact"><strong>' + escapeHtml(label) + "</strong>" + escapeHtml(value) + "</div>";
-    }
-
-    function renderModelDetails(sortedModels) {
-      byId("model-details").innerHTML = sortedModels
-        .map((model) => {
-          const facts = [
-            fact("Format", String(model.format || "unknown")),
-            fact("Memory", preferredMemory(model) !== null ? formatFixed(preferredMemory(model), 2) + " GiB" : "unknown"),
-            fact("Latency", typeof model.average_latency_seconds === "number" ? formatFixed(model.average_latency_seconds, 3) + "s avg" : "no stable latency"),
-            fact("Success", formatSuccess(model)),
-          ].join("");
-
-          const rows = Array.isArray(model.results)
-            ? model.results
-                .map((result) => {
-                  const response = result.error ? "ERROR: " + result.error : (result.response_text || "—");
-                  return (
-                    "<tr>" +
-                    '<td class="result-image-cell">' + renderImageCell(result.image_label || "image") + "</td>" +
-                    '<td class="num mono">' + escapeHtml(formatFixed(result.elapsed_seconds, 3)) + "</td>" +
-                    '<td class="num mono">' + escapeHtml(result.prompt_tokens != null ? String(result.prompt_tokens) : "—") + "</td>" +
-                    '<td class="num mono">' + escapeHtml(result.completion_tokens != null ? String(result.completion_tokens) : "—") + "</td>" +
-                    "<td>" + badge(result.reasoning_present ? "yes" : "no", result.reasoning_present ? "partial" : "stable") + "</td>" +
-                    '<td class="response-cell">' + escapeHtml(response) + "</td>" +
-                    "</tr>"
-                  );
-                })
-                .join("")
-            : "";
-
-          return (
-            "<details>" +
-            "<summary>" +
-            '<div class="details-title">' +
-            "<strong>" + linkedName(model) + "</strong>" +
-            badge(formatSuccess(model), modelStatus(model)) +
-            "</div>" +
-            '<div class="details-meta">' + escapeHtml(String(model.identifier || "unknown identifier")) + "</div>" +
-            "</summary>" +
-            '<div class="details-body">' +
-            '<div class="fact-grid">' + facts + "</div>" +
-            '<div class="table-wrap"><table><thead><tr><th>Image</th><th class="num">Time s</th><th class="num">Prompt</th><th class="num">Completion</th><th>Reasoning</th><th>Response</th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
-            "</div>" +
-            "</details>"
-          );
-        })
-        .join("");
-    }
-
-    const sortedModels = models.slice().sort(sortModels);
-    const stableModels = sortedModels.filter(isStable);
-
-    renderMeta();
-    renderPrompt();
-    renderSampleGallery();
-    renderSummaryCards(sortedModels, stableModels);
-    renderLeaderboard(sortedModels, stableModels);
-    renderScatter(sortedModels);
-    renderLatencyChart(stableModels);
-    renderReliability(sortedModels);
-    renderMemoryChart(sortedModels);
-    renderThroughputChart(sortedModels);
-    renderEfficiencyChart(sortedModels);
-    renderLoadTimeChart(sortedModels);
-    renderLatencySpread(stableModels);
-    renderLatencyHeatmap(sortedModels);
-    renderFormatComparison(sortedModels);
-    renderSpeedTierChart(sortedModels);
-    renderResponseComparison(sortedModels);
-    renderSummaryTable(sortedModels);
-    renderModelDetails(sortedModels);
-    initImageModal();
   </script>
 </body>
 </html>
