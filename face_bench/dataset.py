@@ -110,8 +110,8 @@ def _write_pairs_json(pairs_path: Path, dataset: FaceDataset) -> None:
 def _ensure_sklearn_lfw() -> Path | None:
     """Use sklearn to fetch LFW (handles mirrors). Return the lfw_funneled dir."""
     try:
-        from sklearn.datasets import (
-            fetch_lfw_people,  # type: ignore[import-untyped,unused-ignore]
+        from sklearn.datasets import (  # type: ignore[import-untyped,unused-ignore,ty:unresolved-import]
+            fetch_lfw_people,
         )
 
         # This triggers the full dataset download if not already cached.

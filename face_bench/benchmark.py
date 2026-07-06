@@ -123,7 +123,7 @@ def _get_ram_bytes() -> int:
     except Exception:  # noqa: BLE001
         pass
     try:
-        import psutil  # type: ignore[import-untyped,unused-ignore]
+        import psutil  # type: ignore[import-untyped,unused-ignore,ty:unresolved-import]
 
         return psutil.Process().memory_info().rss
     except Exception:  # noqa: BLE001
